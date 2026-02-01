@@ -1,6 +1,4 @@
 """
-offline audio renderer (initial scaffold).
-
 Goal:
     - Generate a simple waveform
     - write it to a WAV file
@@ -11,7 +9,7 @@ import wave
 
 
 def write_wav_mono(path: str, x: np.ndarray, sr: int) -> None:
-    """write mono 16-bit PCM WAV. x is floar32 in [-1,1]."""
+    """write mono 16-bit PCM WAV. x is float32 in [-1,1]."""
     x = np.array(x, dtype=np.float32)
     x = np.clip(x, -1.0, 1.0) 
     x_i16 = (x*32767.0).astype(np.int16)
@@ -23,13 +21,13 @@ def write_wav_mono(path: str, x: np.ndarray, sr: int) -> None:
         wf.writeframes(x_i16.tobytes())
 
 def main():
-    sr = 48000
-    dur_s = 10.0
-    f_hz = 30000.0 
+    sr = 48000 #sample rate
+    dur_s = 10.0 #duration of play
+    f_hz = 300.0 #sound frequency
 
-    n = int(sr * dur_s)
-    t = np.arange(n, dtype=np.float32) / sr
-    x = 0.2 * np.sin(2.0 * np.pi * f_hz *t) 
+    n = int(sr * dur_s) #total number of samples required
+    t = np.arange(n, dtype=np.float32) / sr #time index
+    x = 1 * np.sin(2.0 * np.pi * f_hz *t) 
 
     write_wav_mono("out.wav", x, sr) 
     print("Wrote out.wav")
