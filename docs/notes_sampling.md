@@ -41,7 +41,7 @@ Bit Rate and Bit Depth are not the same:
 > resolution being how many divisions in an interval 
 > so each sample will represent 1 amplitude value 
 
-In my code i use a 16bit depth where 16 bit has 65536 levels 
+In my code I use a 16-bit depth where 16-bit has 65536 levels 
 but as the amplitude is signed values go from -32767 to +32767
 
 -------------------------------------------------------------------------
