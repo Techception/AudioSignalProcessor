@@ -15,16 +15,16 @@ Index
 
 
 1.	Introduction
-Sound is compression wave that is perceived by brain via our ears which act like a drum.
-a standing wave mode of a sound wave is known as a tone, different frequencies produce different tones. 
-Music is the organisation of these tones in patterns known as rhythm and the combination of these sounds known as tone in rhythm sequencially and simultaneously.
-harmony is when waves of compatible frequencies are played simultaneously. 
+Sound is a vibration that travels through a medium, such as air, as a pressure wave. The ear detects these vibrations and the brain interprets them as sound. 
+A tone is a sound with a discernible pitch, associated with its frequency. Music organises sounds through rhythm, melody and harmony. 
+Rhythm is the pattern of sounds and silences over time; harmony comes from combining different pitches, whether they sound consonant or dissonant.
 
-This project is to create a sound wave synthesiser that will be used in numerous sound and music applications.  ranging from complex music to general environmental sounds. 
-with aims to ultimately descrbe quantum physics in terms of music. 
+This project will explore how computers can generate sound waves for a range of applications, from music to environmental sounds. 
+It will begin by generating fixed pieces of sound in code and may develop into a console for playing sounds in real time. 
+As a learning project, it will examine how software produces digital audio and how a computer’s hardware converts that audio into sound.
 
-several paths will be considered that include generating static pieces just from code, to creating a console that can play sounds live. 
-I intend to use this project as a learning piece to explore how the computer can generate these sounds from its hardware. 
+A longer-term ambition is to explore whether ideas from quantum physics can be represented or explained through musical structures. 
+This will be treated as an exploratory direction, distinct from the project’s core work on sound synthesis.
 
 2.	Scope of work	
   2.1.	Scope	
