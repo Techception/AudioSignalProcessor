@@ -17,7 +17,14 @@ Index
 1.	Introduction
 Sound is compression wave that is perceived by brain via our ears which act like a drum.
 a standing wave mode of a sound wave is known as a tone, different frequencies produce different tones. 
-Music is the organisation of these sounds in patterns known as rhythm and the combination of these sounds known as tone in rhythm sequencially and simultaneously. 
+Music is the organisation of these tones in patterns known as rhythm and the combination of these sounds known as tone in rhythm sequencially and simultaneously.
+harmony is when waves of compatible frequencies are played simultaneously. 
+
+This project is to create a sound wave synthesiser that will be used in numerous sound and music applications.  ranging from complex music to general environmental sounds. 
+with aims to ultimately descrbe quantum physics in terms of music. 
+
+several paths will be considered that include generating static pieces just from code, to creating a console that can play sounds live. 
+I intend to use this project as a learning piece to explore how the computer can generate these sounds from its hardware. 
 
 2.	Scope of work	
   2.1.	Scope	
