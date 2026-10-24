@@ -32,7 +32,7 @@ def main():
     x = 1 * np.sin(2.0 * np.pi * f_hz *t) 
     print(x)
 
-    write_wav_mono("out.wav", x, sr) 
+    write_wav_mono("out/out.wav", x, sr) 
     print("Wrote out.wav")
 
 if __name__== "__main__":
