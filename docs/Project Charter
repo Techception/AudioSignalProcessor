@@ -27,7 +27,15 @@ A longer-term ambition is to explore whether ideas from quantum physics can be r
 This will be treated as an exploratory direction, distinct from the project’s core work on sound synthesis.
 
 2.	Scope of work	
-  2.1.	Scope	
+  2.1.	Scope
+  - sound generation on 
+    operating systems: Windows 11, Ubuntu.
+    languages: python, C
+    chip sets: 
+    bare metal creation with no general operating system 
+  - generation of sinusodal, square, sawtooth waves with and without attentuation 
+  - spherical wave description 
+
   2.2.	Aims & expected Benefits	
   2.3.	Stakeholders Map	 
   2.4.	Process AS IS	
