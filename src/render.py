@@ -10,10 +10,10 @@ range = np.linspace(440,880,12)
 range = [int(i) for i in list(range)]
 pitchs = ('a','b','c','d','e','f','g')
 pitchToFrequency = zip(pitchs,range)
-pitchToFrequency = dict(pitchToFrequency)
+notesPitch = dict(pitchToFrequency)
 #beat note to duration 
 bpm = 60 #change in future 
-notes = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8,'1/32', 60/bpm/32};
+notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
 
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
@@ -25,16 +25,21 @@ if args.mode is null or args.mode=0:
     parser.add_argument("f", type=int, help="tonic frequency in Hz");
     parser.add_argument("t", type=int, help="Duration of note in seconds");
     args = parser.parse_args();
+    #arguments to variables 
+    duration = args.t #length of note in seconds 
+    frequency = args.f
 else:
     #musical description
     parser.add_argument("f", type=str, help="note key in musical notation");
     parser.add_argument("t", type=int, help="Duration as relative musical notes");
+    args = parser.parse_args();
+    #arguments to variables 
+    duration = notesLength(args.t) #length of note in seconds 
+    frequency = NotePitch(args.f)
 #end of conditional 
-args = parser.parse_args();
 
-#arguments to variables 
-duration = args.t #length of note in seconds 
-frequency = args.f
+
+
 
 #this defines the numberline on which the wave is rendered 
 totalSamples = fs*duration
