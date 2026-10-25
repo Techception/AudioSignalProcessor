@@ -11,9 +11,11 @@ range = [int(i) for i in list(range)]
 pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
 pitchToFrequency = zip(pitchs,range)
 notesPitch = dict(pitchToFrequency)
+print(notesPitch)
 #beat note to duration 
 bpm = 60 #change in future 
 notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
+print(notesLength)
 
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
