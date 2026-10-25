@@ -23,7 +23,14 @@ t = np.linspace(
 
 tone = np.sin((2)*(np.pi)*(args.f)*(t)) #the sound wave
 
-plt.plot(t,tone) #plot of the wave for illustration 
+plt.plot(t, tone)
+plt.xlabel("Time (seconds)")
+plt.ylabel("Amplitude")
+plt.title("440 Hz sine wave")
+plt.xlim(0, 0.01)  # show the first 10 milliseconds
+plt.grid(True)
+plt.tight_layout()
+#plt.savefig("docs/images/sine-440hz.png", dpi=150)
 plt.show()
 
 pcm = (tone*32767).astype(np.int16)
