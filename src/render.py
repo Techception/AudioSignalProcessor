@@ -37,6 +37,6 @@ def main(f_hz : int) -> None:
 if __name__== "__main__":
     parser = argparse.ArgumentParser() 
     parser.add_argument("f_hz", type=int, help="frequency in Hz")
-    args = parse.parser_args() 
+    args = parser.parse_args() 
     main(args.f_hz)
 
