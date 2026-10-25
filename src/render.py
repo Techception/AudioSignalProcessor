@@ -11,7 +11,7 @@ args = parser.parse_args();
 
 #statics 
 #for now just a 10 second wave at 44100 sampling 
-duration = duration #length of note in seconds 
+duration = args.duration #length of note in seconds 
 fs = 44100 #sample rate
 
 #this defines the numberline on which the wave is rendered 
