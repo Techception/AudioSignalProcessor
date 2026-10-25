@@ -10,8 +10,16 @@ bpm = 60 #change in future
 notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
 print("notesLength", notesLength)
 #frequency to pitch: 
-if sys.argv[1] == 'equal':  #equal spaced notes
+if sys.argv[1] == 'spaced':  #equal spaced notes
     range = np.linspace(440,880,12)
+    range = [int(i) for i in list(range)]
+    pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
+    pitchToFrequency = zip(pitchs,range)
+    notesPitch = dict(pitchToFrequency)
+    print("notesPitch", notesPitch)
+
+if sys.argv[1] == 'EqT':  #equal spaced notes
+    range = 440*2**(np.arange(440,880,12)/12)
     range = [int(i) for i in list(range)]
     pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
     pitchToFrequency = zip(pitchs,range)
