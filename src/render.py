@@ -23,6 +23,9 @@ t = np.linspace(
 
 tone = np.sin((2)*(np.pi)*(args.f)*(t)) #the sound wave
 
+pcm = (tone*32767).astype(np.int16)
+sys.stdout.buffer.write(pcm.tobytes())
+
 plt.plot(t, tone)
 plt.xlabel("Time (seconds)")
 plt.ylabel("Amplitude")
@@ -30,8 +33,7 @@ plt.title(f"{args.f} Hz sine wave")
 plt.xlim(0, 0.01)  # show the first 0.01 seconds
 plt.grid(True)
 plt.tight_layout()
-plt.savefig(f"out/sine-{args.f}.png", dpi=150)
+plt.savefig(f"sine-{args.f}.png", dpi=150)
 #plt.show()
 
-pcm = (tone*32767).astype(np.int16)
-sys.stdout.buffer.write(pcm.tobytes())
+
