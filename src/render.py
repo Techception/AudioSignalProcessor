@@ -26,8 +26,8 @@ tone = np.sin((2)*(np.pi)*(args.f)*(t)) #the sound wave
 plt.plot(t, tone)
 plt.xlabel("Time (seconds)")
 plt.ylabel("Amplitude")
-plt.title("440 Hz sine wave")
-plt.xlim(0, 0.01)  # show the first 10 milliseconds
+plt.title(f"{args.f} Hz sine wave")
+plt.xlim(0, 10)  # show the first 10 seconds
 plt.grid(True)
 plt.tight_layout()
 #plt.savefig("docs/images/sine-440hz.png", dpi=150)
