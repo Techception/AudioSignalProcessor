@@ -7,6 +7,7 @@ Goal:
 import numpy as np
 import wave
 import sys
+import argparse 
 
 def write_wav_mono(path: str, x: np.ndarray, sr: int) -> None:
     """write mono 16-bit PCM WAV. x is float32 in [-1,1]."""
@@ -20,11 +21,11 @@ def write_wav_mono(path: str, x: np.ndarray, sr: int) -> None:
         wf.setframerate(sr) 
         wf.writeframes(x_i16.tobytes())
 
-def main():
+def main(f_hz : int) -> None:
     sr = 48000 #sample rate
     dur_s = 10.0 #duration of play
     #f_hz = 300.0 #sound frequency
-    f_hz = float(sys.argv[1]) #input sound frequency
+    #f_hz = float(sys.argv[1]) #input sound frequency
     print(f_hz)
     
     n = int(sr * dur_s) #total number of samples required
@@ -36,5 +37,8 @@ def main():
     print("Wrote out.wav")
 
 if __name__== "__main__":
-    main()
+    parser = argparse.ArgumentParser() 
+    parser.add_argument("f_hz", type=int, help="frequency in Hz")
+    args.parser_args() 
+    main(args.f_hz)
 
