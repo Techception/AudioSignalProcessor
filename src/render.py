@@ -8,7 +8,7 @@ fs = 44100 #sample rate
 #frequency to pitch: 
 range = np.linspace(440,880,12)
 range = [int(i) for i in list(range)]
-pitchs = ('a','b','c','d','e','f','g')
+pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
 pitchToFrequency = zip(pitchs,range)
 notesPitch = dict(pitchToFrequency)
 #beat note to duration 
@@ -18,9 +18,8 @@ notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
 parser.add_argument("mode", type=int, help="music mode?");
-args = parser.parse_args();
 #conditional
-if args.mode is null or args.mode=0:
+if sys.argv[1]=0:
     #time frequency description
     parser.add_argument("f", type=int, help="tonic frequency in Hz");
     parser.add_argument("t", type=int, help="Duration of note in seconds");
