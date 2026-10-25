@@ -39,12 +39,12 @@ else:
     frequency = notesPitch[args.f] #frequency in Hz
     duration = notesLength[args.t] #length of note in seconds 
 #end of conditional 
-print(frequency)
-print(duration)
+print("frequency",frequency)
+print("duration", duration)
 
 #this defines the numberline on which the wave is rendered 
 totalSamples = fs*duration
-print(notesLength)
+print('total samples:'totalSamples)
 t = np.linspace(
     0, #beginning of number line in this case t = 0 
     duration, #total duration that the sound plays 
