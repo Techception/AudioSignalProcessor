@@ -12,7 +12,7 @@ python3 render.py "$@" | tee "wave.pcm" | ffplay -f s16le -ar 44100 -ac 1 -nodis
 
 cd ../..
 
-cat > "$test_dir/README.md" <<'EOF'
+cat > "$test_dir/README.md" <<EOF
 # Test notes
 
 ## Purpose
