@@ -37,9 +37,8 @@ else:
     frequency = notesPitch[args.f] #frequency in Hz
     duration = notesLength[args.t] #length of note in seconds 
 #end of conditional 
-
-
-
+print(frequency)
+print(duration)
 
 #this defines the numberline on which the wave is rendered 
 totalSamples = fs*duration
