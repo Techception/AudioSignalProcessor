@@ -26,4 +26,4 @@ tone = np.sin((2)*(np.pi)*(args.f)*(t)) #the sound wave
 plt.plot(t,tone) #plot of the wave for illustration 
 
 pcm = (tone*32767).astype(np.int16)
-sys.stdout.buffer.write(pcm.tobytes())
+#sys.stdout.buffer.write(pcm.tobytes())
