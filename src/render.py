@@ -18,7 +18,7 @@ if sys.argv[1] == 'spaced':  #equal spaced notes
     notesPitch = dict(pitchToFrequency)
     print("notesPitch", notesPitch)
 
-if sys.argv[1] == 'EqT':  #equal spaced notes
+if sys.argv[1] == 'EqT':  #Equal Temperment
     range = 440*2**(np.arange(440,880,12)/12)
     range = [int(i) for i in list(range)]
     pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
