@@ -24,8 +24,6 @@ def write_wav_mono(path: str, x: np.ndarray, sr: int) -> None:
 def main(f_hz : int) -> None:
     sr = 48000 #sample rate
     dur_s = 10.0 #duration of play
-    #f_hz = 300.0 #sound frequency
-    #f_hz = float(sys.argv[1]) #input sound frequency
     print(f_hz)
     
     n = int(sr * dur_s) #total number of samples required
