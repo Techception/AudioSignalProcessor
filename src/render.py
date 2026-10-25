@@ -44,6 +44,7 @@ print(duration)
 
 #this defines the numberline on which the wave is rendered 
 totalSamples = fs*duration
+print(notesLength)
 t = np.linspace(
     0, #beginning of number line in this case t = 0 
     duration, #total duration that the sound plays 
