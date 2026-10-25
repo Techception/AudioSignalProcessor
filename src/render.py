@@ -3,16 +3,38 @@ import numpy as np
 import argparse
 import matplotlib.pyplot as plt
 
+#STATICS
+fs = 44100 #sample rate
+#frequency to pitch: 
+range = np.linspace(440,880,12)
+range = [int(i) for i in list(range)]
+pitchs = ('a','b','c','d','e','f','g')
+pitchToFrequency = zip(pitchs,range)
+pitchToFrequency = dict(pitchToFrequency)
+#beat note to duration 
+bpm = 60 #change in future 
+notes = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8,'1/32', 60/bpm/32};
+
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
-parser.add_argument("f", type=int, help="tonic frequency in Hz");
-parser.add_argument("duration", type=int, help="Duration of note in seconds");
+parser.add_argument("mode", type=int, help="music mode?");
+args = parser.parse_args();
+#conditional
+if args.mode is null or args.mode=0:
+    #time frequency description
+    parser.add_argument("f", type=int, help="tonic frequency in Hz");
+    parser.add_argument("t", type=int, help="Duration of note in seconds");
+    args = parser.parse_args();
+else:
+    #musical description
+    parser.add_argument("f", type=str, help="note key in musical notation");
+    parser.add_argument("t", type=int, help="Duration as relative musical notes");
+#end of conditional 
 args = parser.parse_args();
 
-#statics 
-#for now just a 10 second wave at 44100 sampling 
-duration = args.duration #length of note in seconds 
-fs = 44100 #sample rate
+#arguments to variables 
+duration = args.t #length of note in seconds 
+frequency = args.f
 
 #this defines the numberline on which the wave is rendered 
 totalSamples = fs*duration
@@ -22,12 +44,12 @@ t = np.linspace(
     totalSamples #the number of samples will determine the resolution of the time index 
 ) #time index 
 
-tone = np.sin((2)*(np.pi)*(args.f)*(t)) #the sound wave
+tone = np.sin((2)*(np.pi)*frequency*(t)) #the sound wave
 
 plt.plot(t, tone)
 plt.xlabel("Time (seconds)")
 plt.ylabel("Amplitude")
-plt.title(f"{args.f} Hz sine wave")
+plt.title(f"{frequency} Hz sine wave")
 plt.xlim(0, 0.25)  # show the first 0.01 seconds
 plt.grid(True)
 plt.tight_layout()
