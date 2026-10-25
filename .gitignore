@@ -1,7 +1,5 @@
 .waves/
 __pycache__/
 *.pyc
-out.wav
-*.wav
 .DS_store
-
+.*
