@@ -8,6 +8,6 @@ mkdir -p "$test_dir"
 cp src/render.py "$test_dir/"
 
 cd $test_dir
-python3 render.py "$1" | tee "wave.pcm" | ffplay -f s16le -ar 44100 -ac 1 -nodisp -autoexit -
+python3 render.py "$@" | tee "wave.pcm" | ffplay -f s16le -ar 44100 -ac 1 -nodisp -autoexit -
 
 cd ../..
