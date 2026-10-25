@@ -31,7 +31,7 @@ if sys.argv[1] == 0:
 else:
     #musical description
     parser.add_argument("f", type=str, help="note key in musical notation");
-    parser.add_argument("t", type=int, help="Duration as relative musical notes");
+    parser.add_argument("t", type=str, help="Duration as relative musical notes");
     args = parser.parse_args();
     #arguments to variables 
     frequency = notesPitch[args.f] #frequency in Hz
