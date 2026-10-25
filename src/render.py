@@ -21,7 +21,7 @@ print(notesLength)
 parser = argparse.ArgumentParser();
 parser.add_argument("mode", type=int, help="music mode?");
 #conditional
-if sys.argv[1] == 0:
+if sys.argv[1] == 'hz':
     #time frequency description
     parser.add_argument("f", type=int, help="tonic frequency in Hz");
     parser.add_argument("t", type=int, help="Duration of note in seconds");
