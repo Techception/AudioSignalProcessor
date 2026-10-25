@@ -31,7 +31,7 @@ plt.title(f"{args.f} Hz sine wave")
 plt.xlim(0, 0.01)  # show the first 0.01 seconds
 plt.grid(True)
 plt.tight_layout()
-plt.savefig(f"sine-{args.f}.png", dpi=150)
+plt.savefig(f"wave.png", dpi=150)
 #plt.show()
 
 pcm = (tone*32767).astype(np.int16)
