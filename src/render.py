@@ -19,7 +19,7 @@ notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1
 parser = argparse.ArgumentParser();
 parser.add_argument("mode", type=int, help="music mode?");
 #conditional
-if sys.argv[1]=0:
+if sys.argv[1] == 0:
     #time frequency description
     parser.add_argument("f", type=int, help="tonic frequency in Hz");
     parser.add_argument("t", type=int, help="Duration of note in seconds");
