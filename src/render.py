@@ -5,17 +5,18 @@ import matplotlib.pyplot as plt
 
 #STATICS
 fs = 44100 #sample rate
-#frequency to pitch: 
-range = np.linspace(440,880,12)
-range = [int(i) for i in list(range)]
-pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
-pitchToFrequency = zip(pitchs,range)
-notesPitch = dict(pitchToFrequency)
-print("notesPitch", notesPitch)
 #beat note to duration 
 bpm = 60 #change in future 
 notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
 print("notesLength", notesLength)
+#frequency to pitch: 
+if sys.argv[1] == 'equal':  #equal spaced notes
+    range = np.linspace(440,880,12)
+    range = [int(i) for i in list(range)]
+    pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
+    pitchToFrequency = zip(pitchs,range)
+    notesPitch = dict(pitchToFrequency)
+    print("notesPitch", notesPitch)
 
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
@@ -30,8 +31,7 @@ if sys.argv[1] == 'hz':
     frequency = args.f #frequency in Hz
     duration = args.t #length of note in seconds 
     resolution = 1
-else:
-    #musical description
+else #musical description
     parser.add_argument("f", type=str, help="note key in musical notation");
     parser.add_argument("t", type=str, help="Duration as relative musical notes");
     args = parser.parse_args();
