@@ -34,7 +34,7 @@ else:
     parser.add_argument("t", type=int, help="Duration as relative musical notes");
     args = parser.parse_args();
     #arguments to variables 
-    frequency = NotePitch[args.f] #frequency in Hz
+    frequency = NotesPitch[args.f] #frequency in Hz
     duration = notesLength[args.t] #length of note in seconds 
 #end of conditional 
 
