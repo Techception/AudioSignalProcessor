@@ -29,7 +29,7 @@ if sys.argv[1] == 'hz':
     #arguments to variables 
     frequency = args.f #frequency in Hz
     duration = args.t #length of note in seconds 
-    
+    resolution = 1
 else:
     #musical description
     parser.add_argument("f", type=str, help="note key in musical notation");
@@ -38,6 +38,7 @@ else:
     #arguments to variables 
     frequency = notesPitch[args.f] #frequency in Hz
     duration = notesLength[args.t] #length of note in seconds 
+    resultion = bpm*32
 #end of conditional 
 print("frequency",frequency)
 print("duration", duration)
