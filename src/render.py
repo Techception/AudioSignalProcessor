@@ -45,6 +45,7 @@ print("duration", duration)
 
 #this defines the numberline on which the wave is rendered 
 totalSamples = fs*duration
+totalSamples = int(totalSamples)
 print("total samples:", totalSamples)
 t = np.linspace(
     0, #beginning of number line in this case t = 0 
