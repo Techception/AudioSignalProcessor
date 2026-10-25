@@ -28,7 +28,7 @@ plt.plot(t, tone)
 plt.xlabel("Time (seconds)")
 plt.ylabel("Amplitude")
 plt.title(f"{args.f} Hz sine wave")
-plt.xlim(0, 0.01)  # show the first 0.01 seconds
+plt.xlim(0, 0.25)  # show the first 0.01 seconds
 plt.grid(True)
 plt.tight_layout()
 plt.savefig(f"wave.png", dpi=150)
