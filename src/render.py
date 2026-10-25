@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
 parser.add_argument("f", type=int, help="tonic frequency in Hz");
-parser.add_argument("time", type=int, help="Duration of note in seconds");
+parser.add_argument("duration", type=int, help="Duration of note in seconds");
 args = parser.parse_args();
 
 #statics 
 #for now just a 10 second wave at 44100 sampling 
-duration = time #length of note in seconds 
+duration = duration #length of note in seconds 
 fs = 44100 #sample rate
 
 #this defines the numberline on which the wave is rendered 
