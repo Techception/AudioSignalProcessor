@@ -1,48 +1,98 @@
-Index
-1.	Introduction
-2.	Scope of work	
-  2.1.	Scope	
-  2.2.	Aims & expected Benefits	
-  2.3.	Stakeholders Map	 
-  2.4.	Process AS IS	
-3.	Requirements	
-  3.1.	Functional Requirements	
-  3.2.	Not Functional Requirements
-4.	Requirements out of scope
-5.	Decommission and Migration
-6.	Constraints, Risks and Assumptions
-7.	Priority
+1. Introduction
+Sound is a vibration that travels through a medium, such as air, as a pressure wave. The ear detects these vibrations and the brain interprets them as sound. A tone is a sound with a discernible pitch associated with its frequency. Music organises sounds through rhythm, melody and harmony. Rhythm is the pattern of sounds and silences over time; harmony comes from combining different pitches, whether they sound consonant or dissonant.
 
+This project will explore how computers can generate sound waves for applications ranging from music to environmental sounds. It will begin with generating audio files in code and develop through staged additions, including sound generation in real time. The project will explore how software produces digital audio and how computer hardware converts it into sound.
 
-1.	Introduction
-Sound is a vibration that travels through a medium, such as air, as a pressure wave. The ear detects these vibrations and the brain interprets them as sound. 
-A tone is a sound with a discernible pitch, associated with its frequency. Music organises sounds through rhythm, melody and harmony. 
-Rhythm is the pattern of sounds and silences over time; harmony comes from combining different pitches, whether they sound consonant or dissonant.
+A longer-term ambition is to explore whether ideas from quantum physics can be represented or explained through musical structures. This is an exploratory aim, separate from the synthesiser’s core requirements.
 
-This project will explore how computers can generate sound waves for a range of applications, from music to environmental sounds. 
-It will begin by generating fixed pieces of sound in code and may develop into a console for playing sounds in real time. 
-As a learning project, it will examine how software produces digital audio and how a computer’s hardware converts that audio into sound.
+2. Scope of Work
+  2.1 Scope
+  The project will build a synthesiser in stages:
+    1. Current baseline: A Python program generates a sine wave and writes it to a WAV file.
+    2. Offline waveform generation: Generate WAV files containing sine, square and sawtooth waves.
+    3. Sound shaping and propagation: Add time-varying amplitude envelopes and distance-based attenuation. Investigate spherical wave propagation as a model for the distance effect.
+    4. Live playback: Develop real-time sound playback after the offline waveform and sound-shaping stages.
+    5. C implementation: Port selected sound-generation capabilities to C.
+    6. Bare-metal investigation: Explore generating sound without a general-purpose operating system. The target chipset or board will be selected at a later stage.
 
-A longer-term ambition is to explore whether ideas from quantum physics can be represented or explained through musical structures. 
-This will be treated as an exploratory direction, distinct from the project’s core work on sound synthesis.
+  The software stages will target Windows 11 and Ubuntu. Python is the initial language; C and bare-metal work are later stages. The interface for selecting waveform settings is undecided; the existing script’s command-line input is the starting point.
 
-2.	Scope of work	
-  2.1.	Scope
-  - sound generation on 
-    operating systems: Windows 11, Ubuntu.
-    languages: python, C
-    chip sets: 
-    bare metal creation with no general operating system 
-  - generation of sinusodal, square, sawtooth waves with and without attentuation 
-  - spherical wave description 
+  2.2 Aims and Expected Benefits
+  The project aims to:
+    - Build practical understanding of digital audio, waveform generation and sound propagation.
+    - Develop skills relevant to scientific computing and engineering through a substantial technical artefact.
+    - Create documented code and demonstrations that make the technical work understandable to future users and reviewers.
+    - Produce a synthesiser that the project owner can use and learn from, with potential use by others as a later goal.
+    - Explore a musical representation of selected ideas from quantum physics as a longer-term activity.
 
-  2.2.	Aims & expected Benefits	
-  2.3.	Stakeholders Map	 
-  2.4.	Process AS IS	
-3.	Requirements	
-  3.1.	Functional Requirements	
-  3.2.	Not Functional Requirements
-4.	Requirements out of scope
-5.	Decommission and Migration
-6.	Constraints, Risks and Assumptions
-7.	Priority
+  2.3 Stakeholder Map
+  Stakeholder	Role or interest
+  Project owner	Plans, builds and uses the synthesiser; primary learner and user
+  Future users	May use the synthesiser after the learning-focused stages
+  Technical reviewers	May review the code and demonstrations as evidence of engineering and scientific-computing ability
+
+  There is no external customer or sponsor at this stage.
+
+  2.4 Process AS IS
+  The current Python program accepts a frequency, generates ten seconds of a sine wave at 48 kHz, converts it to mono 16-bit PCM, and writes a WAV file. An unfinished experiment/stream.py contains an early attempt at live playback.
+
+  The current generator does not yet provide selectable waveforms, amplitude envelopes, distance-based attenuation or completed live playback.
+ 
+3. Requirements
+  3.1 Functional Requirements
+  The synthesiser will:
+    - Generate and save sound as a WAV file.
+    - Support sine, square and sawtooth waveforms.
+    - Allow the user to specify a frequency; the method for selecting waveform settings remains to be decided.
+    - Support amplitude envelopes that change sound amplitude over time.
+    - Support distance-based attenuation using a defined spherical-wave model.
+    - Provide live playback in a later stage.
+    - Include selected sound-generation capabilities implemented in C in a later stage.
+    - Explore bare-metal sound generation after a target device has been selected.
+    - Include documentation and demonstrations of the technical work.
+
+  3.2 Non-Functional Requirements
+  The project will:
+    - Support Windows 11 and Ubuntu for its software stages.
+    - Use code that is organised and documented well enough for the owner and future reviewers to understand it.
+    - Record how to run each completed stage and reproduce its demonstrations.
+    - Produce valid WAV audio. The current baseline uses 48 kHz, mono, 16-bit PCM; these are initial settings and may be revised as the project develops.
+    - Aim for stable, uninterrupted output when real-time playback is implemented.
+
+4. Requirements Out of Scope
+The following are not requirements for the first WAV-generator version; they are later project stages:
+  - Square and sawtooth WAV generation.
+  - Amplitude envelopes and distance-based attenuation.
+  - Live playback.
+  - C and bare-metal implementations.
+  - The quantum-physics exploration.
+
+The project does not currently specify a target chipset or board. That will be decided before bare-metal implementation.
+
+5. Decommission and Migration
+No existing system is being replaced, and there is no user data to migrate.
+
+Completed versions will be preserved in the same Git repository as tagged snapshots. The first completed version will capture the WAV generator without the unfinished live-playback experiment. The experiment will be retained for later work.
+
+6. Constraints, Risks and Assumptions
+  Constraints and assumptions
+    - Python is the first implementation language; C and bare-metal work come later.
+    - Windows 11 and Ubuntu are the target operating systems for software stages.
+    - The hardware target for bare-metal development has not yet been selected.
+    - The exact interface for selecting waveform settings is a later design decision.
+    - The project is primarily a learning and portfolio artefact; use by others is a secondary aim.
+
+  Risks
+    - Real-time playback may require different audio libraries or configuration across operating systems.
+    - Bare-metal development depends on selecting suitable hardware and learning its audio-output interface.
+    - The project spans sound generation, software, hardware and physics, so it must be delivered in stages.
+    - The quantum-physics and music connection is exploratory and does not yet have defined acceptance criteria.
+
+7. Priority
+  1. Preserve the current Python sine-wave WAV generator as the first completed version.
+  2. Add offline WAV generation for sine, square and sawtooth waves.
+  3. Add amplitude envelopes, distance attenuation and the spherical-wave model.
+  4. Complete live playback.
+  5. Port selected capabilities to C.
+  6. Select hardware and investigate bare-metal sound generation.
+  7. Explore the quantum-physics and music connection.
