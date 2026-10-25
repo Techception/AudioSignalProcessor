@@ -25,16 +25,17 @@ if sys.argv[1] == 0:
     parser.add_argument("t", type=int, help="Duration of note in seconds");
     args = parser.parse_args();
     #arguments to variables 
+    frequency = args.f #frequency in Hz
     duration = args.t #length of note in seconds 
-    frequency = args.f
+    
 else:
     #musical description
     parser.add_argument("f", type=str, help="note key in musical notation");
     parser.add_argument("t", type=int, help="Duration as relative musical notes");
     args = parser.parse_args();
     #arguments to variables 
-    duration = notesLength(args.t) #length of note in seconds 
-    frequency = NotePitch(args.f)
+    frequency = NotePitch[args.f] #frequency in Hz
+    duration = notesLength[args.t] #length of note in seconds 
 #end of conditional 
 
 
