@@ -19,7 +19,7 @@ print(notesLength)
 
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
-parser.add_argument("mode", type=int, help="music mode?");
+parser.add_argument("mode", type=str, help="music mode?");
 #conditional
 if sys.argv[1] == 'hz':
     #time frequency description
