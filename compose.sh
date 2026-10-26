@@ -1,0 +1,1 @@
+{ python3 src/render.py EqT c 1; python3 src/render.py EqT e 1; python3 src/render.py EqT g 1; python3 src/render.py spaced c 1; python3 src/render.py spaced e 1; python3 src/render.py spaced g 1;} | tee combined.pcm   | ffplay -f s16le -ar 44100 -ac 1 -nodisp -autoexit -

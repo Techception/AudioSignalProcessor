@@ -2,13 +2,14 @@ import sys
 import numpy as np
 import argparse
 import matplotlib.pyplot as plt
-
+####################################################################################
 #STATICS
 fs = 44100 #sample rate
 #beat note to duration 
 bpm = 60 #change in future 
 notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
 print("notesLength", notesLength)
+
 #frequency to pitch: 
 if sys.argv[1] == 'spaced':  #equal spaced notes
     range = np.linspace(440,880,12)
@@ -25,24 +26,20 @@ if sys.argv[1] == 'EqT':  #Equal Temperment
     pitchToFrequency = zip(pitchs,range)
     notesPitch = dict(pitchToFrequency)
     print("notesPitch", notesPitch)
-
+####################################################################################
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
 parser.add_argument("mode", type=str, help="music mode?");
+parser.add_argument("f", type=str, help="tonic frequency in Hz");
+parser.add_argument("t", type=str, help="Duration of note in seconds");
+args = parser.parse_args();
 #conditional
-if sys.argv[1] == 'hz':
-    #time frequency description
-    parser.add_argument("f", type=int, help="tonic frequency in Hz");
-    parser.add_argument("t", type=int, help="Duration of note in seconds");
-    args = parser.parse_args();
+if sys.argv[1] == 'hz': #time frequency description
     #arguments to variables 
-    frequency = args.f #frequency in Hz
-    duration = args.t #length of note in seconds 
+    frequency = int(args.f) #frequency in Hz
+    duration = int(args.t) #length of note in seconds 
     resolution = 1
 else: #musical description
-    parser.add_argument("f", type=str, help="note key in musical notation");
-    parser.add_argument("t", type=str, help="Duration as relative musical notes");
-    args = parser.parse_args();
     #arguments to variables 
     frequency = notesPitch[args.f] #frequency in Hz
     duration = notesLength[args.t] #length of note in seconds 
@@ -50,28 +47,39 @@ else: #musical description
 #end of conditional 
 print("frequency",frequency)
 print("duration", duration)
-
+####################################################################################
+#Calculations
 #this defines the numberline on which the wave is rendered 
 totalSamples = fs*duration
 totalSamples = int(totalSamples)
 print("total samples:", totalSamples)
-t = np.linspace(
+time = np.linspace(
     0, #beginning of number line in this case t = 0 
     duration, #total duration that the sound plays 
     totalSamples #the number of samples will determine the resolution of the time index 
 ) #time index 
 
-tone = np.sin((2)*(np.pi)*frequency*(t)) #the sound wave
+wave = np.sin((2)*(np.pi)*frequency*(time)) #the sound wave
 
-plt.plot(t, tone)
-plt.xlabel("Time (seconds)")
-plt.ylabel("Amplitude")
-plt.title(f"{frequency} Hz sine wave")
-plt.xlim(0, 0.25)  # show the first 0.01 seconds
-plt.grid(True)
-plt.tight_layout()
-plt.savefig(f"wave.png", dpi=150)
-#plt.show()
+#Analysis
+def graph (
+        title: str = "waveform", 
+        wave: np.ndarray = np.linspace(0,0,0), 
+        time: np.ndarray = np.linspace(0,(2*np.pi),360)
+        ) -> None:
+    #plot graph with title and axis 
+    plt.plot(time, wave)
+    plt.xlabel("Time (seconds)")
+    plt.ylabel("Amplitude")
+    plt.title(f"{title} Hz sine wave")
+    plt.xlim(0, 0.25)  # show the first 0.01 seconds
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(f"wave.png", dpi=150)
+    #plt.show()
 
-pcm = (tone*32767).astype(np.int16)
+pcm = (wave*32767).astype(np.int16)
 sys.stdout.buffer.write(pcm.tobytes())
+
+if __name__ == '__main__':
+    graph (title=frequency, wave=wave, time = time)
