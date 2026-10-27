@@ -1,15 +1,15 @@
 import sys
-import numpy as np
-from numpy import pi, sin
 import argparse
 import matplotlib.pyplot as plt
+import numpy as np
+from numpy import pi, sin
 ####################################################################################
 #STATICS
 fs = 44100 # sample rate
 #beat note to duration 
 bpm = 60 # change in future 
 notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
-print("notesLength", notesLength)
+#print("notesLength", notesLength)
 
 #frequency to pitch: 
 if sys.argv[1] == 'spaced':  # equal spaced notes
@@ -26,7 +26,7 @@ if sys.argv[1] == 'EqT':  # Equal Temperment
     pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
     pitchToFrequency = zip(pitchs,range)
     notesPitch = dict(pitchToFrequency)
-    print("notesPitch", notesPitch)
+    #print("notesPitch", notesPitch)
 ####################################################################################
 #get frequency information from the commandline arguments
 parser = argparse.ArgumentParser();
@@ -46,13 +46,13 @@ else: #musical description
     duration = notesLength[args.t] # length of note in seconds 
     resultion = bpm*32
 #end of conditional 
-print("frequency",frequency)
-print("duration", duration)
+#print("frequency",frequency)
+#print("duration", duration)
 ####################################################################################
 #Calculations
-def wave(sampleRate: int = 0, duration: float = 0, Amplitude: int = 1, frequency: int = 0):
+def wave(sampleRate: int = 0, duration: float = 0, frequency: int = 0, amplitude: int = 1) -> dict:
     totalSamples = sampleRate*duration  # total datapoints (float)
-    A = Amplitude;                      # Max Amplitude 
+    A = amplitude;                      # Max Amplitude 
     F = frequency;
     W = (2*pi) * F;                     # Angular frequency
     
@@ -69,26 +69,27 @@ def wave(sampleRate: int = 0, duration: float = 0, Amplitude: int = 1, frequency
     #A(t) = A x sin(2 x pi x f x t)
     wave = A*sin(W * time)           # Mathematical wave
     pcm = (wave*32767).astype(np.int16) # the digital file data
-    data = {'func': wave, 'timeRange':time, 'bin': pcm}
-    return data
+    pcm = pcm.tobytes()
+    data = {'func': wave, 'timeRange':time, 'bytes': pcm}
     
     #Debugging
-    print("total samples:", totalSamples);
-    print('Time range:',time);
+    #print("total samples:", totalSamples);
+    #print('Time range:',time);
+    return data
 
 #Analysis
 def graph (
         title: str = "waveform"
         ,wave: np.ndarray = np.linspace(0,0,0)
         ,time: np.ndarray = np.linspace(0,(2*np.pi),360)
-        ,Timefinal: float = 1
+        ,timefinal: float = 1
         ) -> None:
     #plot graph with title and axis 
     plt.plot(time, wave)
     plt.xlabel("Time (seconds)")
     plt.ylabel("Amplitude")
     plt.title(f"{title} Hz sine wave")
-    plt.xlim(0, Timefinal)  # show the first 0.01 seconds
+    plt.xlim(0, timefinal)  # show the first 0.01 seconds
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(f"wave.png", dpi=150)
@@ -97,10 +98,10 @@ def graph (
 
 if __name__ == '__main__':
     
-    waveData = wave(sampleRate = fs, duration =  duration, Amplitude = 1, frequency = frequency)
+    waveData = wave(sampleRate = fs, duration =  duration, frequency = frequency, amplitude = 1)
     waveEquation = waveData['func']
     waveTimeRange = waveData['timeRange'] 
-    wavePCM = waveData['bin']
+    wavePCM = waveData['bytes']
 
-    graph (title = frequency, wave = waveEquation, time = waveTimeRange, Timefinal = 0.25)
-    sys.stdout.buffer.write(wavePCM.tobytes())
+    graph (title = frequency, wave = waveEquation, time = waveTimeRange, timefinal = 0.25)
+    sys.stdout.buffer.write(wavePCM)
