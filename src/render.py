@@ -81,7 +81,7 @@ def wave(sampleRate: int = 0, duration: float = 0, frequency: int = 0, amplitude
 def graph (
         title: str = "waveform"
         ,wave: np.ndarray = np.linspace(0,0,0)
-        ,time: np.ndarray = np.linspace(0,(2*np.pi),360)
+        ,time: np.ndarray = np.linspace(0,(2*pi),360)
         ,timefinal: float = 1
         ) -> None:
     #plot graph with title and axis 
