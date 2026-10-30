@@ -1,11 +1,51 @@
 ####################################################################################
 ####################################################################################
+# Structure
+"""
+<render.py>
+    <import/>
+    <variables/>
 
-import sys
-import argparse
-import matplotlib.pyplot as plt
-import numpy as np
-from numpy import pi, sin
+    <def_functions>
+        1.
+        <Convertions>
+            <def pitchMap(range)/>
+            <def musicalConversion()/>
+        </Convertions>
+        
+        2.
+        <Calculations>
+            <def wave(*defaults) -> dict>
+                - wave equation
+                - file data
+            </def>
+        <Calculations>
+        
+        3.
+        <analysis>
+            <def graph (*args) -> None/>
+        </analysis>
+    <def_functions>
+
+    <main>
+        - note = musicalConversion()
+        - waveData = wave()
+        - graph ()
+        - stdout()
+    </main>
+
+</render.py>
+"""
+
+
+####################################################################################
+####################################################################################
+
+import sys;
+import argparse;
+import matplotlib.pyplot as plt;
+import numpy as np;
+from numpy import pi, sin;
 
 ####################################################################################
 ####################################################################################
@@ -26,6 +66,8 @@ fs = 44100 # sample rate
 
 ####################################################################################
 ####################################################################################
+# <Convertions>
+# convert musical notation into frequency and seconds 
 
 bpm = 60 # change in future 
 def pitchMap(range):
@@ -63,18 +105,8 @@ def musicalConversion():
 
 ####################################################################################
 ####################################################################################
+# <Calculations>
 
-note = musicalConversion()
-frequency = note['pitch'] # frequency in Hz
-duration = note['length'] # length of note in seconds 
-#end of conditional 
-print("frequency",frequency)
-print("duration", duration)
-
-####################################################################################
-####################################################################################
-
-#Calculations
 def wave(sampleRate: int = 0, duration: float = 0, frequency: int = 0, amplitude: int = 1) -> dict:
     totalSamples = sampleRate*duration  # total datapoints (float)
     A = amplitude;                      # Max Amplitude 
@@ -104,8 +136,8 @@ def wave(sampleRate: int = 0, duration: float = 0, frequency: int = 0, amplitude
 
 ####################################################################################
 ####################################################################################
+# <Analysis>
 
-#Analysis
 def graph (
         title: str = "waveform"
         ,wave: np.ndarray = np.linspace(0,0,0)
@@ -126,8 +158,16 @@ def graph (
 
 ####################################################################################
 ####################################################################################
+#<main>
 
 if __name__ == '__main__':
+
+    note = musicalConversion()
+    frequency = note['pitch'] # frequency in Hz
+    duration = note['length'] # length of note in seconds 
+    #end of conditional 
+    print("frequency",frequency)
+    print("duration", duration)
     
     waveData = wave(sampleRate = fs, duration =  duration, frequency = frequency, amplitude = 1)
     waveEquation = waveData['func']
