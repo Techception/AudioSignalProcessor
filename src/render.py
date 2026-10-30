@@ -1,6 +1,7 @@
 ####################################################################################
 ####################################################################################
 # Structure
+
 """
 <render.py>
     <import/>
@@ -28,10 +29,11 @@
     <def_functions>
 
     <main>
-        - note = musicalConversion()
-        - waveData = wave()
-        - graph ()
-        - stdout()
+        - args = parseArguments()
+        - note = musicalConversion(args)
+        - waveData = wave(note)
+        - graph(waveData)
+        - stdout(waveData)
     </main>
 
 </render.py>
@@ -40,6 +42,7 @@
 
 ####################################################################################
 ####################################################################################
+#<import/>
 
 import sys;
 import argparse;
@@ -47,16 +50,7 @@ import matplotlib.pyplot as plt;
 import numpy as np;
 from numpy import pi, sin;
 
-####################################################################################
-####################################################################################
 
-#get frequency information from the commandline arguments
-parser = argparse.ArgumentParser();
-parser.add_argument("--mode", type=str, help="music mode?");
-parser.add_argument("--pitch", type=str, help="tonic frequency in Hz");
-parser.add_argument("--length", type=str, help="Duration of note in seconds");
-args = parser.parse_args();
-print(args.mode)
 
 ####################################################################################
 ####################################################################################
@@ -70,38 +64,47 @@ fs = 44100 # sample rate
 # convert musical notation into frequency and seconds 
 
 bpm = 60 # change in future 
-def pitchMap(range):
+def pitchMap(range) -> dict:
     pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
     range = [int(i) for i in list(range)]
     pitchToFrequency = zip(pitchs,range)
     notesPitch = dict(pitchToFrequency)
     return notesPitch
 
-def musicalConversion():
+def noteToPitch(range: np.linspace, pitch: str, length: str, notesLength: dict) -> dict:
+        range = np.linspace(440,880,12)
+        notesPitch = pitchMap(range)
+        notePitch = notesPitch[pitch]
+        noteLength = notesLength[length]
+        note = {'pitch':notePitch, 'length': noteLength}
+        #print('note:', note)
+        return note 
+
+def musicalConversion(mode:str, pitch: str, length: str) -> dict:
     #beat note to duration 
     notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
 
     #wave frequency and time description of sound 
-    if args.mode == 'hz':                  # time frequency description
-        notePitch = int(args.pitch)        # frequency in Hz
-        noteLength = int(args.length)      # length of note in seconds 
-        return {'pitch':notePitch, 'length': noteLength} ##e.g. {'pitch': 440, 'length: 1}
+    if mode == 'hz':                  # time frequency description
+        #print("mode:", mode)
+        notePitch = int(pitch)        # frequency in Hz
+        noteLength = int(length)      # length of note in seconds 
+        note = {'pitch':notePitch, 'length': noteLength} ##e.g. {'pitch': 440, 'length: 1}
+        return note
 
     #Musical Tone to concert frequency (spaced interval): 
-    if args.mode == 'spaced':  # equal spaced notes
-        range = np.linspace(440,880,12)
-        notesPitch = pitchMap(range)
-        notePitch = notesPitch[args.pitch]
-        noteLength = notesLength[args.length]
-        return {'pitch':notePitch, 'length': noteLength}
+    if mode == 'spaced':  # equal spaced notes
+        #print("mode:", mode)
+        spaced = np.linspace(440,880,12)
+        note = noteToPitch(range= spaced, pitch= pitch, length= length, notesLength= notesLength)
+        return note
     
     #Musical Tone to concert frequency (Equal Temperment):
-    if args.mode == 'EqT':  # Equal Temperment
-        range = 440*2**(np.arange(12)/12)
-        notesPitch = pitchMap(range)
-        notePitch = notesPitch[args.pitch]
-        noteLength = notesLength[args.length]
-        return {'pitch':notePitch, 'length': noteLength}
+    if mode == 'EqT':  # Equal Temperment
+        #print("mode:", mode)
+        EqT = 440*2**(np.arange(12)/12)
+        note = noteToPitch(range= EqT, pitch= pitch, length= length, notesLength=notesLength)
+        return note
 
 ####################################################################################
 ####################################################################################
@@ -161,13 +164,20 @@ def graph (
 #<main>
 
 if __name__ == '__main__':
+    #get frequency information from the commandline arguments
+    parser = argparse.ArgumentParser();
+    parser.add_argument("--mode", type=str, help="music mode?");
+    parser.add_argument("--pitch", type=str, help="tonic frequency in Hz");
+    parser.add_argument("--length", type=str, help="Duration of note in seconds");
+    args = parser.parse_args();
+    print(args)
 
-    note = musicalConversion()
+    note = musicalConversion(mode= args.mode, pitch= args.pitch, length= args.length)
     frequency = note['pitch'] # frequency in Hz
     duration = note['length'] # length of note in seconds 
     #end of conditional 
-    print("frequency",frequency)
-    print("duration", duration)
+    #print("frequency",frequency)
+    #print("duration", duration)
     
     waveData = wave(sampleRate = fs, duration =  duration, frequency = frequency, amplitude = 1)
     waveEquation = waveData['func']
