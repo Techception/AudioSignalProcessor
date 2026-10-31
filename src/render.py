@@ -42,7 +42,7 @@
 
 ####################################################################################
 ####################################################################################
-#<import/>
+# <import/>
 
 import sys;
 import argparse;
@@ -63,7 +63,6 @@ fs = 44100 # sample rate
 # <Convertions>
 # convert musical notation into frequency and seconds 
 
-bpm = 60 # change in future 
 def pitchMap(range) -> dict:
     pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
     range = [int(i) for i in list(range)]
@@ -71,39 +70,37 @@ def pitchMap(range) -> dict:
     notesPitch = dict(pitchToFrequency)
     return notesPitch
 
-def noteToPitch(range: np.linspace, pitch: str, length: str, notesLength: dict) -> dict:
-        range = np.linspace(440,880,12)
-        notesPitch = pitchMap(range)
-        notePitch = notesPitch[pitch]
-        noteLength = notesLength[length]
-        note = {'pitch':notePitch, 'length': noteLength}
-        #print('note:', note)
-        return note 
+def noteToPitch(range: np.linspace, pitch: str, length: str, bpm: int = 60) -> dict:
+    #beat note to duration 
+    notesLength = {
+        '1': 60/bpm
+        ,'1/2': 60/bpm/2
+        ,'1/4': 60/bpm/4
+        ,'1/8': 60/bpm/8
+        ,'1/32': 60/bpm/32
+        };
+    range = np.linspace(440,880,12)
+    notesPitch = pitchMap(range)
+    notePitch = notesPitch[pitch]
+    noteLength = notesLength[length]
+    note = {'pitch':notePitch, 'length': noteLength}
+    #print('note:', note)
+    return note 
 
 def musicalConversion(mode:str, pitch: str, length: str) -> dict:
-    #beat note to duration 
-    notesLength = {'1': 60/bpm,'1/2': 60/bpm/2, '1/4': 60/bpm/4, '1/8': 60/bpm/8, '1/32': 60/bpm/32};
-
     #wave frequency and time description of sound 
-    if mode == 'hz':                  # time frequency description
-        #print("mode:", mode)
-        notePitch = int(pitch)        # frequency in Hz
-        noteLength = int(length)      # length of note in seconds 
-        note = {'pitch':notePitch, 'length': noteLength} ##e.g. {'pitch': 440, 'length: 1}
-        return note
+    #print("mode:", mode)
 
     #Musical Tone to concert frequency (spaced interval): 
     if mode == 'spaced':  # equal spaced notes
-        #print("mode:", mode)
         spaced = np.linspace(440,880,12)
-        note = noteToPitch(range= spaced, pitch= pitch, length= length, notesLength= notesLength)
+        note = noteToPitch(range= spaced, pitch= pitch, length= length)
         return note
     
     #Musical Tone to concert frequency (Equal Temperment):
     if mode == 'EqT':  # Equal Temperment
-        #print("mode:", mode)
         EqT = 440*2**(np.arange(12)/12)
-        note = noteToPitch(range= EqT, pitch= pitch, length= length, notesLength=notesLength)
+        note = noteToPitch(range= EqT, pitch= pitch, length= length)
         return note
 
 ####################################################################################
@@ -161,18 +158,28 @@ def graph (
 
 ####################################################################################
 ####################################################################################
-#<main>
+# <main>
+
+
 
 if __name__ == '__main__':
     #get frequency information from the commandline arguments
     parser = argparse.ArgumentParser();
     parser.add_argument("--mode", type=str, help="music mode?");
+    parser.add_argument("--temperment", type=str, help=""); ## todo
+    parser.add_argument("--sampleRate", type=str, help=""); ## todo
     parser.add_argument("--pitch", type=str, help="tonic frequency in Hz");
     parser.add_argument("--length", type=str, help="Duration of note in seconds");
     args = parser.parse_args();
     print(args)
 
-    note = musicalConversion(mode= args.mode, pitch= args.pitch, length= args.length)
+    if args.mode == 'hz':                  # time frequency description
+        notePitch = int(args.pitch)        # frequency in Hz
+        noteLength = int(args.length)      # length of note in seconds 
+        note = {'pitch':notePitch, 'length': noteLength} ##e.g. {'pitch': 440, 'length: 1}
+    else:
+        note = musicalConversion(mode= args.mode, pitch= args.pitch, length= args.length)
+
     frequency = note['pitch'] # frequency in Hz
     duration = note['length'] # length of note in seconds 
     #end of conditional 
