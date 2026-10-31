@@ -5,23 +5,23 @@ import numpy as np
 # <Convertions>
 # convert musical notation into frequency and seconds 
 
+intervals_EqT = 440*2**(np.arange(12)/12)
+intervals_spaced = np.linspace(440,880,12)
+tones_12ToneChrome = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
 # map note names to frequencies 
-def pitchMap(range: np.linspace) -> dict:
-    pitchs = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
-    range = [int(i) for i in list(range)]
-    pitchToFrequency = zip(pitchs,range)
-    notesPitch = dict(pitchToFrequency)
-    return notesPitch
+def pitchMap(intervals: np= intervals_EqT, tones: tuple= tones_12ToneChrome) -> dict:
+    range = [int(i) for i in list(intervals)]
+    tonesToFrequency = zip(tones,range)
+    ToneMapFrequency = dict(tonesToFrequency)
+    return ToneMapFrequency
 
 
-def timeMap(noteValue: str, signature: str = '4/4', bpm: int = 60):
+def timeMap(noteValue: str, signature: str= '4/4', bpm: int= 60):
     # e.g. consider sig: 4/4 note_length: 1/4 how long in seconds? 
     # beatValue = 1/denominator(signature) = 1/denominator(4/4) = 1/4
     # beats = note_length / beatValue
-
     (noteNumerator , noteDenominator) = map(int, noteValue.split('/')) ## possibly an unnecesary step? 
     (_ , noteUnit) = map(int, signature.split('/'))                    ## beats per bar : note unit
-    
     note = (noteNumerator / noteDenominator) # Convert to float e.g. 1-quater note = 1/4 = 0.25 
     beatUnit = 1/noteUnit                    # what note represents a single beat? 4/4 means beat unite is quarter-note = 1/4 
     noteBeats = note / beatUnit          # how long the note lasts in terms of beats 
@@ -29,27 +29,42 @@ def timeMap(noteValue: str, signature: str = '4/4', bpm: int = 60):
     return noteSeconds
  
 
-def noteToPitch(range: np.linspace, pitch: str, length: str, bpm: int = 60) -> dict:
-    #beat note to duration 
-    notesLength = {
-        '1': 60/bpm
-        ,'1/2': 60/bpm/2
-        ,'1/4': 60/bpm/4
-        ,'1/8': 60/bpm/8
-        ,'1/32': 60/bpm/32
-        };
-    range = np.linspace(440,880,12)
-    notesPitch = pitchMap(range)
-    notePitch = notesPitch[pitch]
-    noteLength = notesLength[length]
+def noteBuilder(note: tuple) -> dict:
+    tone, noteValue = note[0], note[1]
+    notePitch = pitchMap()[tone]
+    noteLength = timeMap(noteValue)
     note = {'pitch':notePitch, 'length': noteLength}
-    #print('note:', note)
     return note 
 
-def debug():
-    noteValue = input('enter note value: ')
+####################################################################################
+####################################################################################
+def debug_pitchMap():
+    print('option 1', intervals_EqT)
+    print('option 2', intervals_spaced)
+    option = input('select option: ')
+    if option == '1':
+        frequency = pitchMap(intervals_EqT)
+    elif option == '2':
+        frequency = pitchMap(intervals_spaced)
+    print(frequency)
+    return None
+
+def debug_timeMap():
+    noteValue = input('enter note value e.g. 1/4 for quater-note/crotchet: ')
     time = timeMap(noteValue= noteValue, signature= '4/4', bpm= 60)
     print(f"\na {noteValue} note plays for {time} s")
+    return None
+
+def debug_noteToPitch():
+    input_note = input('tone, time: ').split(',')
+    note = noteBuilder(input_note)
+    print(f'note: ',note)
+
+def debug():
+    #debug_pitchMap()
+    #debug_timeMap()
+    debug_noteToPitch()
+
 
 if __name__ == '__main__':
     debug()

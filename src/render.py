@@ -54,35 +54,9 @@ import analysis
 
 ####################################################################################
 ####################################################################################
-
-#STATICS
-fs = 44100 # sample rate
-
-####################################################################################
-####################################################################################
-# <Convertions>
-# convert musical notation into frequency and seconds 
-
-def musicalConversion(mode:str, pitch: str, length: str) -> dict:
-    #wave frequency and time description of sound 
-    #print("mode:", mode)
-
-    #Musical Tone to concert frequency (spaced interval): 
-    if mode == 'spaced':  # equal spaced notes
-        spaced = np.linspace(440,880,12)
-        note = converter.noteToPitch(range= spaced, pitch= pitch, length= length)
-        return note
-    
-    #Musical Tone to concert frequency (Equal Temperment):
-    if mode == 'EqT':  # Equal Temperment
-        EqT = 440*2**(np.arange(12)/12)
-        note = converter.noteToPitch(range= EqT, pitch= pitch, length= length)
-        return note
-
-####################################################################################
-####################################################################################
 # <Calculations>
 
+fs = 44100 # sample rate
 def wave(sampleRate: int = 0, duration: float = 0, frequency: int = 0, amplitude: int = 1) -> dict:
     totalSamples = sampleRate*duration  # total datapoints (float)
     A = amplitude;                      # Max Amplitude 
@@ -131,30 +105,21 @@ def main():
     #print('args:', args)
 
     if args.mode == 'hz':                  # time frequency description
-        notePitch = int(args.pitch)        # frequency in Hz
-        noteLength = int(args.length)      # length of note in seconds 
-        note = {'pitch':notePitch, 'length': noteLength} ##e.g. {'pitch': 440, 'length: 1}
+        note = {'pitch':int(args.pitch), 'length': int(args.length)} ##e.g. {'pitch': 440, 'length: 1}
     else:
-        note = musicalConversion(mode= args.mode, pitch= args.pitch, length= args.length)
+        input_note = input('tone, time: ').split(',')
+        note = converter.noteBuilder(note= input_note)
+    print(f'note {note}')
     
-    frequency = note['pitch'] # frequency in Hz
-    duration = note['length'] # length of note in seconds 
-    #end of conditional 
-    #print("frequency",frequency)
-    #print("duration", duration)
+    frequency, duration = note['pitch'], note['length'] # (Hz, s))
     
     waveData = wave(sampleRate = fs, duration =  duration, frequency = frequency, amplitude = 1)
-    waveEquation = waveData['func']
-    waveTimeRange = waveData['timeRange'] 
-    wavePCM = waveData['bytes']
+    waveEquation, waveTimeRange, wavePCM = waveData['func'], waveData['timeRange'], waveData['bytes']
     
-    sys.stdout.buffer.write(wavePCM)
-    #analysis.graph(title = frequency, wave = waveEquation, time = waveTimeRange, timefinal = 0.25)
+    #sys.stdout.buffer.write(wavePCM)
+    analysis.graph(title = frequency, wave = waveEquation, time = waveTimeRange, timefinal = 0.25)
     return None
 
 if __name__ == '__main__':
     #get frequency information from the commandline arguments
     main()
-
-
-

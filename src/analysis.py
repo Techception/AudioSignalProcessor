@@ -19,6 +19,6 @@ def graph (
     plt.xlim(0, timefinal)  # show the first 0.01 seconds
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f"wave.png", dpi=150)
-    #plt.show()
+    #plt.savefig(f"wave.png", dpi=150)
+    plt.show()
     return None
