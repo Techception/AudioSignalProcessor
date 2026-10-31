@@ -74,12 +74,8 @@ def main():
     #print('args:', args)
     SAMPLERATE = 44100 # sample rate
 
-    input_note = (duration, tone) = input('duration, tone: ').split(',')
-    print('')
-    if args.mode == 'hz':                  # time frequency description
-        note = {'duration': int(duration), 'frequency': int(tone)} ##e.g. {'pitch': 440, 'length: 1}
-    else:
-        note = converter.noteBuilder(note= input_note)
+    input_note = input('duration, tone: ').split(',')
+    note = converter.noteBuilder(input_note, args.mode)
     print(f'note {note}')
     
     waveData = calculations.wave(**note)

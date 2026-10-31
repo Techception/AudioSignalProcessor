@@ -9,7 +9,7 @@ intervals_EqT = 440*2**(np.arange(12)/12)
 intervals_spaced = np.linspace(440,880,12)
 tones_12ToneChrome = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
 # map note names to frequencies 
-def pitchMap(intervals: np= intervals_EqT, tones: tuple= tones_12ToneChrome) -> dict:
+def pitchMap(intervals: np, tones: tuple= tones_12ToneChrome) -> dict:
     range = [int(i) for i in list(intervals)]
     tonesToFrequency = zip(tones,range)
     ToneMapFrequency = dict(tonesToFrequency)
@@ -29,11 +29,19 @@ def timeMap(noteValue: str, signature: str= '4/4', bpm: int= 60):
     return noteSeconds
  
 
-def noteBuilder(note: tuple) -> dict:
-    duration, tone = note[0], note[1]
-    converted_duration = timeMap(duration)
-    frequency = pitchMap()[tone]
-    note = {'duration': converted_duration, 'frequency':frequency}
+def noteBuilder(note: tuple, mode:str) -> dict:
+    
+    if mode == 'EqT': 
+        interval = intervals_EqT
+    elif mode == 'Spaced': 
+        interval = intervals_spaced
+
+    if mode == 'hz':
+        (duration_sec, frequency) = (int(note[0]), int(note[1]))    
+    else:
+        (duration_sec, frequency) = (timeMap(note[0]), pitchMap(interval)[note[1]])
+    
+    note = {'duration': duration_sec, 'frequency':frequency}
     return note 
 
 ####################################################################################
