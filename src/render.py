@@ -49,50 +49,19 @@ import argparse;
 import matplotlib.pyplot as plt;
 import numpy as np;
 from numpy import pi, sin;
+# synth modules:
 import converter
 import analysis
+import calculations
 
 ####################################################################################
 ####################################################################################
 # <Calculations>
 
-fs = 44100 # sample rate
-def wave(sampleRate: int = 0, duration: float = 0, frequency: int = 0, amplitude: int = 1) -> dict:
-    totalSamples = sampleRate*duration  # total datapoints (float)
-    A = amplitude;                      # Max Amplitude 
-    F = frequency;
-    W = (2*pi) * F;                     # Angular frequency
-    
-    #this defines the numberline on which the wave is rendered 
-    totalSamples = int(totalSamples)    # total datapoints (integer)
-    #Get the time range = duration of wave
-    time = np.linspace( 
-        0,           # beginning of number line in this case t = 0 
-        duration,    # total duration that the sound plays 
-        totalSamples # the number of samples will determine the resolution of the time index 
-    ) # time index 
-
-    #Generate waves
-    #A(t) = A x sin(2 x pi x f x t)
-    wave = A*sin(W * time)           # Mathematical wave
-    pcm = (wave*32767).astype(np.int16) # the digital file data
-    pcm = pcm.tobytes()
-    data = {'func': wave, 'timeRange':time, 'bytes': pcm}
-    
-    #Debugging
-    #print("total samples:", totalSamples);
-    #print('Time range:',time);
-    return data
-
-####################################################################################
-####################################################################################
 def arguments():
     parser = argparse.ArgumentParser();
     parser.add_argument("--mode", type=str, help="music mode?");    ## for converter 
-    parser.add_argument("--temperment", type=str, help=""); ## todo ## for converter 
     parser.add_argument("--sampleRate", type=str, help=""); ## todo ## for main program
-    parser.add_argument("--pitch", type=str, help="tonic frequency in Hz");        ## change to stdin 
-    parser.add_argument("--length", type=str, help="Duration of note in seconds"); ## change to stdin 
     args = parser.parse_args();
     return args
 
@@ -103,21 +72,21 @@ def arguments():
 def main():
     args = arguments();
     #print('args:', args)
+    SAMPLERATE = 44100 # sample rate
 
+    input_note = (duration, tone) = input('duration, tone: ').split(',')
+    print('')
     if args.mode == 'hz':                  # time frequency description
-        note = {'pitch':int(args.pitch), 'length': int(args.length)} ##e.g. {'pitch': 440, 'length: 1}
+        note = {'duration': int(duration), 'frequency': int(tone)} ##e.g. {'pitch': 440, 'length: 1}
     else:
-        input_note = input('tone, time: ').split(',')
         note = converter.noteBuilder(note= input_note)
     print(f'note {note}')
     
-    frequency, duration = note['pitch'], note['length'] # (Hz, s))
-    
-    waveData = wave(sampleRate = fs, duration =  duration, frequency = frequency, amplitude = 1)
+    waveData = calculations.wave(**note)
     waveEquation, waveTimeRange, wavePCM = waveData['func'], waveData['timeRange'], waveData['bytes']
     
     #sys.stdout.buffer.write(wavePCM)
-    analysis.graph(title = frequency, wave = waveEquation, time = waveTimeRange, timefinal = 0.25)
+    analysis.graph(title = note['frequency'], wave = waveEquation, time = waveTimeRange, timefinal = 0.25)
     return None
 
 if __name__ == '__main__':

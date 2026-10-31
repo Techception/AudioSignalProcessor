@@ -30,10 +30,10 @@ def timeMap(noteValue: str, signature: str= '4/4', bpm: int= 60):
  
 
 def noteBuilder(note: tuple) -> dict:
-    tone, noteValue = note[0], note[1]
-    notePitch = pitchMap()[tone]
-    noteLength = timeMap(noteValue)
-    note = {'pitch':notePitch, 'length': noteLength}
+    duration, tone = note[0], note[1]
+    converted_duration = timeMap(duration)
+    frequency = pitchMap()[tone]
+    note = {'duration': converted_duration, 'frequency':frequency}
     return note 
 
 ####################################################################################
@@ -56,9 +56,9 @@ def debug_timeMap():
     return None
 
 def debug_noteToPitch():
-    input_note = input('tone, time: ').split(',')
+    input_note = input('time, tone: ').split(',')
     note = noteBuilder(input_note)
-    print(f'note: ',note)
+    print('note: ',note)
 
 def debug():
     #debug_pitchMap()
