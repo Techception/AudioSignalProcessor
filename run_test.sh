@@ -5,10 +5,10 @@ done
 
 test_dir="out/test$(printf '%02d' "$n")"
 mkdir -p "$test_dir"
-cp src/render.py "$test_dir/"
+rsync -av --exclude='__pycache__' -r src "$test_dir/"
 
 cd $test_dir
-python3 render.py "$@" | tee "wave.pcm" | ffplay -f s16le -ar 44100 -ac 1 -nodisp -autoexit -
+python3 src/render.py "$@" | tee "wave.pcm" | ffplay -f s16le -ar 44100 -ac 1 -nodisp -autoexit -
 #ffmpeg -f s16le -ar 44100 -ac 1 -t 0.25 -i wave.pcm  -filter_complex "[0:a]showwavespic=s=1200x400:colors=blue[wave]"   -map "[wave]" -frames:v 1 wave2.png
 
 cd ../..
