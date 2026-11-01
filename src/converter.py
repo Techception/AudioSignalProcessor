@@ -25,7 +25,7 @@ def pitchMap(mode: str) -> dict:
     return ToneMapFrequency
 
 
-def timeMap(noteValue: str, signature: str= '4/4', bpm: int= 60):
+def timeMap(noteValue: str, signature: str= '4/4', bpm: int= 100):
     # e.g. consider sig: 4/4 note_length: 1/4 how long in seconds? 
     # beatValue = 1/denominator(signature) = 1/denominator(4/4) = 1/4
     # beats = note_length / beatValue

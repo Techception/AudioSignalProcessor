@@ -66,7 +66,8 @@ def main():
     waves = list()
     try:
         while True:
-            input_note = input('duration, tone: ').split(',')
+            #print('Enter note in format: duration,tone', file=sys.stderr)
+            input_note = input().split(',')
             note = converter.noteBuilder(MODE, TEMPERMENT, *input_note)
             waveData = calculations.wave(**note)
             waves.append(waveData)
@@ -75,13 +76,8 @@ def main():
     except EOFError:
         pass
 
-    
-    # analysis.graph(
-    #     title = note['frequency']
-    #     ,wave = waveData['func']
-    #     ,time = waveData['timeRange']
-    #     ,timefinal = 1/note['frequency']
-    #     )
+    #print(len(waves), file=sys.stderr)
+    #analysis.graph(**waves[-1],timefinal = 0.25)
     return None
 
 if __name__ == '__main__':
