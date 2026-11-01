@@ -54,37 +54,35 @@ import converter
 import analysis
 import calculations
 
-####################################################################################
-####################################################################################
-# <Calculations>
-
-def arguments():
-    parser = argparse.ArgumentParser();
-    parser.add_argument("--mode", type=str, help="music mode?");    ## for converter 
-    parser.add_argument("--sampleRate", type=str, help=""); ## todo ## for main program
-    args = parser.parse_args();
-    return args
-
 
 ####################################################################################
 ####################################################################################
 # <main>
-def main():
-    args = arguments();
-    #print('args:', args)
+def main(input_note):
+    MODE = 'hz'
     SAMPLERATE = 44100 # sample rate
 
-    input_note = input('duration, tone: ').split(',')
-    note = converter.noteBuilder(input_note, args.mode)
-    print(f'note {note}')
+    
+    note = converter.noteBuilder(MODE, *input_note)
+    #print(f'note {note}')
     
     waveData = calculations.wave(**note)
-    waveEquation, waveTimeRange, wavePCM = waveData['func'], waveData['timeRange'], waveData['bytes']
+    #waveEquation, waveTimeRange, wavePCM = waveData['func'], waveData['timeRange'], waveData['bytes']
     
-    #sys.stdout.buffer.write(wavePCM)
-    analysis.graph(title = note['frequency'], wave = waveEquation, time = waveTimeRange, timefinal = 0.25)
+    sys.stdout.buffer.write(waveData['bytes'])
+    sys.stdout.flush()
+    # analysis.graph(
+    #     title = note['frequency']
+    #     ,wave = waveData['func']
+    #     ,time = waveData['timeRange']
+    #     ,timefinal = 1/note['frequency']
+    #     )
     return None
 
 if __name__ == '__main__':
-    #get frequency information from the commandline arguments
-    main()
+    try:
+        while True:
+            input_note = input('duration, tone: ').split(',')
+            main(input_note)
+    except EOFError:
+        pass

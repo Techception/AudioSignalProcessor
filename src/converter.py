@@ -29,7 +29,7 @@ def timeMap(noteValue: str, signature: str= '4/4', bpm: int= 60):
     return noteSeconds
  
 
-def noteBuilder(note: tuple, mode:str) -> dict:
+def noteBuilder(mode: str, duration: str, tone: str) -> dict:
     
     if mode == 'EqT': 
         interval = intervals_EqT
@@ -37,9 +37,9 @@ def noteBuilder(note: tuple, mode:str) -> dict:
         interval = intervals_spaced
 
     if mode == 'hz':
-        (duration_sec, frequency) = (int(note[0]), int(note[1]))    
+        (duration_sec, frequency) = (int(duration), int(tone))    
     else:
-        (duration_sec, frequency) = (timeMap(note[0]), pitchMap(interval)[note[1]])
+        (duration_sec, frequency) = (timeMap(duration), pitchMap(interval)[tone])
     
     note = {'duration': duration_sec, 'frequency':frequency}
     return note 
