@@ -5,11 +5,20 @@ import numpy as np
 # <Convertions>
 # convert musical notation into frequency and seconds 
 
-intervals_EqT = 440*2**(np.arange(12)/12)
-intervals_spaced = np.linspace(440,880,12)
-tones_12ToneChrome = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
+
 # map note names to frequencies 
-def pitchMap(intervals: np, tones: tuple= tones_12ToneChrome) -> dict:
+def pitchMap(mode: str) -> dict:
+
+    tones_12ToneChrome = ('a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#')
+    tones = tones_12ToneChrome
+
+    if mode.lower() == 'eqt':      # Equal temperment 
+        intervals_EqT = 440*2**(np.arange(12)/12)
+        intervals = intervals_EqT
+    elif mode.lower() == 'spaced': # spaced intervals 
+        intervals_spaced = np.linspace(440,880,12)
+        intervals = intervals_spaced
+
     range = [int(i) for i in list(intervals)]
     tonesToFrequency = zip(tones,range)
     ToneMapFrequency = dict(tonesToFrequency)
@@ -29,33 +38,28 @@ def timeMap(noteValue: str, signature: str= '4/4', bpm: int= 60):
     return noteSeconds
  
 
-def noteBuilder(mode: str, duration: str, tone: str) -> dict:
+def noteBuilder(mode: str, ToneMapFrequency: dict, duration: str, tone: str) -> dict:
     
-    if mode == 'EqT': 
-        interval = intervals_EqT
-    elif mode == 'Spaced': 
-        interval = intervals_spaced
-
-    if mode == 'hz':
+    if mode.lower() == 'hz':
         (duration_sec, frequency) = (int(duration), int(tone))    
     else:
-        (duration_sec, frequency) = (timeMap(duration), pitchMap(interval)[tone])
+        (duration_sec, frequency) = (timeMap(duration), ToneMapFrequency[tone])
     
     note = {'duration': duration_sec, 'frequency':frequency}
     return note 
 
 ####################################################################################
 ####################################################################################
-def debug_pitchMap():
-    print('option 1', intervals_EqT)
-    print('option 2', intervals_spaced)
-    option = input('select option: ')
-    if option == '1':
-        frequency = pitchMap(intervals_EqT)
-    elif option == '2':
-        frequency = pitchMap(intervals_spaced)
-    print(frequency)
-    return None
+# def debug_pitchMap():
+#     print('option 1', intervals_EqT)
+#     print('option 2', intervals_spaced)
+#     option = input('select option: ')
+#     if option == '1':
+#         frequency = pitchMap(intervals_EqT)
+#     elif option == '2':
+#         frequency = pitchMap(intervals_spaced)
+#     print(frequency)
+#     return None
 
 def debug_timeMap():
     noteValue = input('enter note value e.g. 1/4 for quater-note/crotchet: ')

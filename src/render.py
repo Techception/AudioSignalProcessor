@@ -53,24 +53,29 @@ from numpy import pi, sin;
 import converter
 import analysis
 import calculations
-
-
 ####################################################################################
 ####################################################################################
+
+MODE = 'eqt'
+SAMPLERATE = 44100 # sample rate
+TEMPERMENT = converter.pitchMap('EqT')
+
 # <main>
-def main(input_note):
-    MODE = 'hz'
-    SAMPLERATE = 44100 # sample rate
+def main():
+
+    waves = list()
+    try:
+        while True:
+            input_note = input('duration, tone: ').split(',')
+            note = converter.noteBuilder(MODE, TEMPERMENT, *input_note)
+            waveData = calculations.wave(**note)
+            waves.append(waveData)
+            sys.stdout.buffer.write(waveData['bytes'])
+            sys.stdout.flush()
+    except EOFError:
+        pass
 
     
-    note = converter.noteBuilder(MODE, *input_note)
-    #print(f'note {note}')
-    
-    waveData = calculations.wave(**note)
-    #waveEquation, waveTimeRange, wavePCM = waveData['func'], waveData['timeRange'], waveData['bytes']
-    
-    sys.stdout.buffer.write(waveData['bytes'])
-    sys.stdout.flush()
     # analysis.graph(
     #     title = note['frequency']
     #     ,wave = waveData['func']
@@ -80,9 +85,4 @@ def main(input_note):
     return None
 
 if __name__ == '__main__':
-    try:
-        while True:
-            input_note = input('duration, tone: ').split(',')
-            main(input_note)
-    except EOFError:
-        pass
+    main()
