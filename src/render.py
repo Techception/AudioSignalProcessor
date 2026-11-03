@@ -1,47 +1,3 @@
-####################################################################################
-####################################################################################
-# Structure
-
-"""
-<render.py>
-    <import/>
-    <variables/>
-
-    <def_functions>
-        1.
-        <Convertions>
-            <def pitchMap(range)/>
-            <def musicalConversion()/>
-        </Convertions>
-        
-        2.
-        <Calculations>
-            <def wave(*defaults) -> dict>
-                - wave equation
-                - file data
-            </def>
-        <Calculations>
-        
-        3.
-        <analysis>
-            <def graph (*args) -> None/>
-        </analysis>
-    <def_functions>
-
-    <main>
-        - args = parseArguments()
-        - note = musicalConversion(args)
-        - waveData = wave(note)
-        - graph(waveData)
-        - stdout(waveData)
-    </main>
-
-</render.py>
-"""
-
-
-####################################################################################
-####################################################################################
 # <import/>
 
 import sys;
@@ -58,7 +14,7 @@ import calculations
 
 MODE = 'eqt'
 SAMPLERATE = 44100 # sample rate
-TEMPERMENT = converter.pitchMap('EqT')
+TEMPERMENT = converter.pitchMap(MODE)
 
 # <main>
 def main():
@@ -66,7 +22,7 @@ def main():
     waves = list()
     try:
         while True:
-            #print('Enter note in format: duration,tone', file=sys.stderr)
+            print('Enter note in format: duration,tone', file=sys.stderr)
             input_note = input().split(',')
             note = converter.noteBuilder(MODE, TEMPERMENT, *input_note)
             waveData = calculations.wave(**note)

@@ -5,12 +5,12 @@ import numpy as np;
 # <Calculations>
 
 
-def wave(duration: float, frequency: int, sampleRate: int = 44100, amplitude: int = 1) -> dict:
-    totalSamples = sampleRate*duration  # total datapoints (float)
+def wave(duration: float, frequency: int, sampleRate: int = 44100, amplitude: int = 0.5) -> dict:
     A = amplitude;                      # Max Amplitude 
     F = frequency;
     W = (2*np.pi) * F;                     # Angular frequency
-    
+
+    totalSamples = sampleRate*duration  # total datapoints (float)
     #this defines the numberline on which the wave is rendered 
     totalSamples = int(totalSamples)    # total datapoints (integer)
     #Get the time range = duration of wave

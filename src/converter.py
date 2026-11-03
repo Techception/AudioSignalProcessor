@@ -22,6 +22,7 @@ def pitchMap(mode: str) -> dict:
     range = [int(i) for i in list(intervals)]
     tonesToFrequency = zip(tones,range)
     ToneMapFrequency = dict(tonesToFrequency)
+    ToneMapFrequency['-'] = 0
     return ToneMapFrequency
 
 
@@ -46,7 +47,7 @@ def noteBuilder(mode: str, ToneMapFrequency: dict, duration: str, tone: str) -> 
         (duration_sec, frequency) = (timeMap(duration), ToneMapFrequency[tone])
     
     note = {'duration': duration_sec, 'frequency':frequency}
-    return note 
+    return note
 
 ####################################################################################
 ####################################################################################
@@ -76,7 +77,6 @@ def debug():
     #debug_pitchMap()
     #debug_timeMap()
     debug_noteToPitch()
-
 
 if __name__ == '__main__':
     debug()
