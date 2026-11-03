@@ -12,6 +12,7 @@ run_test.sh:
         -   pcm file 
     - pipe output to ffplay that does the physical sound making 
     - can be used alone or pipe in a musical score 
+    - example: cat scores/music.composer | bash run_test.sh
 
 scores:
     - contains score/compositions 
@@ -30,4 +31,3 @@ cat scores/music.composer | python3 src/render.py 2> /dev/null | tee "wave.pcm" 
 
 explaination: 
 input: score file -> generator (no stdErr output) -> branched pipe to file and to ffplay -> output: sound generated from ffplay reading pcm 
-

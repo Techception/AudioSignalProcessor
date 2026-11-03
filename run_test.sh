@@ -5,7 +5,7 @@ done
 
 test_dir="out/test$(printf '%02d' "$n")"
 mkdir -p "$test_dir"
-rsync -av --exclude='__pycache__' -r src "$test_dir/"
+rsync -av --exclude='__pycache__' -r src "$test_dir/" > /dev/null 2>&1 
 
 #########################################
 #########################################
