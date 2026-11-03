@@ -2,10 +2,8 @@ import numpy as np;
 
 ####################################################################################
 ####################################################################################
-# <Calculations>
-
-
-def wave(duration: float, frequency: int, sampleRate: int = 44100, amplitude: int = 0.5) -> dict:
+# <Calculations> generate full wave over defined time range 
+def generator(duration: float, frequency: int, sampleRate: int = 44100, amplitude: int = 0.5) -> dict:
     A = amplitude;                      # Max Amplitude 
     F = frequency;
     W = (2*np.pi) * F;                     # Angular frequency
@@ -31,3 +29,6 @@ def wave(duration: float, frequency: int, sampleRate: int = 44100, amplitude: in
     #print("total samples:", totalSamples);
     #print('Time range:',time);
     return data
+
+####################################################################################
+####################################################################################

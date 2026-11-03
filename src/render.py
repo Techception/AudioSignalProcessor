@@ -15,22 +15,27 @@ import calculations
 MODE = 'eqt'
 SAMPLERATE = 44100 # sample rate
 TEMPERMENT = converter.pitchMap(MODE)
+VOLUME = 1
+def waveEquation(time, frequency):
+    w = (2*np.pi) * frequency    # Angular frequency 
+    arg = w * time
+    return VOLUME * np.sin(arg)
+
+
 
 # <main>
 def main():
 
     waves = list()
-    try:
-        while True:
-            print('Enter note in format: duration,tone', file=sys.stderr)
-            input_note = input().split(',')
-            note = converter.noteBuilder(MODE, TEMPERMENT, *input_note)
-            waveData = calculations.wave(**note)
-            waves.append(waveData)
-            sys.stdout.buffer.write(waveData['bytes'])
-            sys.stdout.flush()
-    except EOFError:
-        pass
+    time = 0 
+
+    for frequency in sys.stdin:
+        print(time, frequency)
+        print(type(frequency))
+        frequency = int(frequency.strip())
+        a = waveEquation(time, frequency)
+        waves.append(a)
+        time += 1/SAMPLERATE;
 
     #print(len(waves), file=sys.stderr)
     #analysis.graph(**waves[-1],timefinal = 0.25)
