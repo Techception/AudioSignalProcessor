@@ -63,3 +63,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#python3 src/render.py | ffplay -f s16le -ar 44100 -ch_layout mono -nodisp - 2> /dev/null 
