@@ -1,44 +1,27 @@
 # <import/>
 
-import sys;
-import argparse;
-import matplotlib.pyplot as plt;
+
 import numpy as np;
-from numpy import pi, sin;
-# synth modules:
-import converter
-import analysis
-import calculations
+
 ####################################################################################
 ####################################################################################
 
-MODE = 'eqt'
-SAMPLERATE = 44100 # sample rate
-TEMPERMENT = converter.pitchMap(MODE)
-VOLUME = 1
-def waveEquation(time, frequency):
-    w = (2*np.pi) * frequency    # Angular frequency 
-    arg = w * time
-    return VOLUME * np.sin(arg)
+SAMPLE_RATE = 44100; # sample rate
+frequency_hz = 440;
 
 
+sample = lambda f,index : np.sin(2 * np.pi * f * index/SAMPLE_RATE );
 
 # <main>
 def main():
 
-    waves = list()
-    time = 0 
+    samples = list()
+    for index in range(SAMPLE_RATE):
+        a = sample(frequency_hz, index)
+        samples.append(a)
 
-    for frequency in sys.stdin:
-        print(time, frequency)
-        print(type(frequency))
-        frequency = int(frequency.strip())
-        a = waveEquation(time, frequency)
-        waves.append(a)
-        time += 1/SAMPLERATE;
+        print(a)
 
-    #print(len(waves), file=sys.stderr)
-    #analysis.graph(**waves[-1],timefinal = 0.25)
     return None
 
 if __name__ == '__main__':
