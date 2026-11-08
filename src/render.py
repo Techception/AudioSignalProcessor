@@ -4,6 +4,7 @@ from math import sin, pi
 import time;
 import threading;
 import sys;
+import tty;
 ####################################################################################
 ####################################################################################
 
@@ -28,24 +29,24 @@ def play_thread():
     chunk = 2000 # number of samples to generate at a time
     while True:
         sound_chunk = array([sample(frequency_hz, index + i) * 32767 for i in range(chunk)], dtype=int16)
-        sys.stdout.buffer.write(sound_chunk.tobytes())
-        sys.stdout.buffer.flush()
+        sys.stderr.buffer.write(sound_chunk.tobytes())
+        sys.stderr.buffer.flush()
         index += chunk
-        #time.sleep(chunk / 2*SAMPLE_RATE)  # Sleep for the duration of the chunk
+        time.sleep(1)  # Sleep for the duration of the chunk
 
 def input_thread():
     global frequency_hz
     while True:
         #user_input = input("Enter new frequency in Hz (or 'exit' to quit): ")
-        user_input = input()
-        if user_input.lower() == 'exit':
-            quit()
+        #user_input = input()
+        tty.setcbreak(sys.stdin.fileno())
+        print('enter: ')
+        user_input = sys.stdin.read(1)
         try:
-            new_frequency = float(user_input)
+            new_frequency = 100*float(user_input)
             frequency_hz = new_frequency
-            #print(f"Frequency changed to {frequency_hz} Hz", file=sys.stderr)
+            print(f"Frequency changed to {frequency_hz} Hz")
         except ValueError:
-            #print("Invalid input. Please enter a valid number.", file=sys.stderr, flush=True)
             pass
 
 def main():
