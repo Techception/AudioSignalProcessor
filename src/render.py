@@ -1,10 +1,11 @@
+#!/usr/bin/env python3
+
 # <import>
 from numpy import array, int16
 from math import sin, pi
 import time;
 import threading;
 import sys;
-import tty;
 # </import>
 
 # <variables>
@@ -25,24 +26,27 @@ def sample(f, index):
 def play_thread():
     global frequency_hz
     index = 0
-    chunk = 2000 # number of samples to generate at a time
+    chunk = 441 # number of samples to generate at a time
     while True:
         sound_chunk = array([sample(frequency_hz, index + i) * 32767 for i in range(chunk)], dtype=int16)
-        sys.stderr.buffer.write(sound_chunk.tobytes())
-        sys.stderr.buffer.flush()
+        sys.stdout.buffer.write(sound_chunk.tobytes())
+        sys.stdout.buffer.flush()
         index += chunk
-        time.sleep(1)  # Sleep for the duration of the chunk
+        #time.sleep(1)  # Sleep for the duration of the chunk
+
 # </generator>
 
 # <input thread>
 def input_thread():
     global frequency_hz
+    
     while True:
-        #user_input = input("Enter new frequency in Hz (or 'exit' to quit): ")
-        #user_input = input()
-        tty.setcbreak(sys.stdin.fileno())
         print('enter: ')
-        user_input = sys.stdin.read(1)
+        user_input = input()
+
+        if user_input == 'q':
+            quit()
+
         try:
             new_frequency = 100*float(user_input)
             frequency_hz = new_frequency
@@ -70,5 +74,6 @@ if __name__ == '__main__':
 # </main>
 
 # <usage>
-#python3 src/render.py | ffplay -f s16le -ar 44100 -ch_layout mono -nodisp - 2> /dev/null 
+# python3 src/render.py | ffplay -f s16le -ar 44100 -ch_layout mono -nodisp - 2> /dev/null 
+# ./experiment/input.sh | ./src/render.py | ffplay -f s16le -ar 44100 -ch_layout mono -nodisp -
 # </usage>
