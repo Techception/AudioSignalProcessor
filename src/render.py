@@ -11,6 +11,8 @@ import sys;
 # <variables>
 SAMPLE_RATE = 44100; # sample rate
 frequency_hz = 320; # default frequency in Hz
+chunk = 441 # number of samples to generate at a time
+wait = chunk / SAMPLE_RATE # time to wait between chunks in seconds
 # </variables>
 
 # <Calculations>
@@ -26,13 +28,13 @@ def sample(f, index):
 def play_thread():
     global frequency_hz
     index = 0
-    chunk = 441 # number of samples to generate at a time
+
     while True:
         sound_chunk = array([sample(frequency_hz, index + i) * 32767 for i in range(chunk)], dtype=int16)
         sys.stdout.buffer.write(sound_chunk.tobytes())
         sys.stdout.buffer.flush()
         index += chunk
-        #time.sleep(1)  # Sleep for the duration of the chunk
+        time.sleep(wait)  # Sleep for the duration of the chunk
 
 # </generator>
 
@@ -41,12 +43,12 @@ def input_thread():
     global frequency_hz
     
     while True:
-        print('enter: ')
+        #print('enter: ')
         user_input = input()
 
         if user_input == 'q':
-            quit()
-
+            quit()        
+        
         try:
             new_frequency = 100*float(user_input)
             frequency_hz = new_frequency
@@ -76,4 +78,5 @@ if __name__ == '__main__':
 # <usage>
 # python3 src/render.py | ffplay -f s16le -ar 44100 -ch_layout mono -nodisp - 2> /dev/null 
 # ./experiment/input.sh | ./src/render.py | ffplay -f s16le -ar 44100 -ch_layout mono -nodisp -
+# ./experiment/input.sh | ./src/render.py | ffplay -f s16le -ar 44100 -ch_layout mono -nodisp -fflags nobuffer -flags low_delay -
 # </usage>
