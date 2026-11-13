@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [ ! -d ".venv" ]; then 
+    python3 -m venv .venv
+	source .venv/bin/activate
+	python3 -m pip install -r ./setup/requirements.txt
+fi
+
+source .venv/bin/activate
+	
+echo "Starting Audio Signal Processor..." 
+
+./program/src/interface/input.sh | \
+	./program/src/core/render.py | \
+		ffplay -f s16le -ar 44100 -ch_layout mono -nodisp -fflags nobuffer -flags low_delay - 2> /dev/null
+
+source deactivate

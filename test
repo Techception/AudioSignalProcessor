@@ -1,7 +1,0 @@
-#!/bin/bash
-
-while true; do 
-	echo "press key"
-	read -rsn1 key 
-done
-
