@@ -2,7 +2,7 @@
 
 # <import>
 from numpy import array, int16
-from math import sin, pi
+from math import exp, sin, pi
 import time;
 import threading;
 import sys;
@@ -15,12 +15,13 @@ frequency_hz = 320; # default frequency in Hz
 chunk = 441 # number of samples to generate at a time
 wait = chunk / SAMPLE_RATE # time to wait between chunks in seconds
 index = 0
-decay = 1
+decay = 0
+sustain = 10 # number of chunks to sustain before decaying
 # </variables>
 
 # <functions>
 # <generator>  
-amplitude = lambda f, t: (1/decay)*sin(2 * pi * f * t)
+amplitude = lambda f, t: exp(-decay/50)*sin(2 * pi * f * t)
 def generator():
     t_i = [(index + i) / SAMPLE_RATE for i in range(chunk)]
     waveChunk = [amplitude(frequency_hz, t) for t in t_i]
@@ -35,6 +36,7 @@ def console_input():
     global PLAY
     global frequency_hz
     global decay
+    global sustain
     exitCode = 1
 
     #promt_in = None
@@ -42,7 +44,8 @@ def console_input():
     promt_in = "Enter new frequency in Hz (or 'q' to quit): "
     #print(promt_in, file=sys.stderr, flush=True)
     user_input = input()
-    decay = 1
+    decay = 0 #reset decay when user input is received
+    sustain = 10 #reset sustain when user input is received
     # <check for quit command>
     if user_input.lower() == 'q':
         PLAY = False
@@ -71,14 +74,17 @@ def play_thread():
     global PLAY
     global index
     global decay
+    global sustain
     # <range of time points to generate wave samples for/>
     while PLAY:
         generator()
-        decay += 1
-        print(decay, end='\r', file=sys.stderr, flush=True)
+        sustain -= 1
+        if sustain <= 0:
+            decay += 1 #increment decay for each chunk generated
+        #print(decay, end='\r', file=sys.stderr, flush=True)
         # <update index and wait for next chunk/>
         index += chunk
-        time.sleep(wait)  # Sleep for the duration of the chunk
+        time.sleep(wait*22/23)  # Sleep for the duration of the chunk
 
     return None
 # </thread 1>
