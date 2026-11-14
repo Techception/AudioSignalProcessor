@@ -24,10 +24,17 @@ playback_pid=$!
 
 clear
 # input process
-echo "play..."
+echo "playing...$playback_pid"
 {
 	while true; do 
 		read -rsn1 key 
 		echo $key
+
+		if [[ $key == "q" ]]; then
+			kill $playback_pid
+			break
+		fi
+	
 	done
-}| ./program/src/core/render.py > "$pipe_sound"
+}| ./program/src/core/render.py > "$pipe_sound" 
+
