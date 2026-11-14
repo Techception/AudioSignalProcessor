@@ -10,10 +10,24 @@ if [ ! -d ".venv" ]; then
 fi
 	
 echo "Starting Audio Signal Processor..." 
-mkfifo pipe
 
-./program/src/interface/input.sh | \
-	./program/src/core/render.py | \
-		ffplay -f s16le -ar 44100 -ch_layout mono -nodisp -fflags nobuffer -flags low_delay - 2> /dev/null
+#pipe_input=./program/data/pipe_input
+#[[ -p "$pipe_input" ]] || mkfifo "$pipe_input"	
+# <pipes>
+pipe_sound=./program/data/pipe_sound
+[[ -p "$pipe_sound" ]] || mkfifo "$pipe_sound"
 
-source deactivate
+# playback process
+ffplay -f s16le -ar 44100 -ch_layout mono -nodisp -fflags nobuffer -flags low_delay - \
+	< "$pipe_sound" 2> /dev/null &
+playback_pid=$!
+
+clear
+# input process
+echo "play..."
+{
+	while true; do 
+		read -rsn1 key 
+		echo $key
+	done
+}| ./program/src/core/render.py > "$pipe_sound"

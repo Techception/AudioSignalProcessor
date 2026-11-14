@@ -36,7 +36,7 @@ def console_input():
     #promt_out = None
     promt_in = "Enter new frequency in Hz (or 'q' to quit): "
     promt_out = f"Current frequency: {frequency_hz} Hz. Enter new frequency in Hz (or 'q' to quit): "
-    print(promt_in, file=sys.stderr, flush=True)
+    #print(promt_in, file=sys.stderr, flush=True)
     user_input = input()
     try:
         new_frequency = 100*float(user_input)
