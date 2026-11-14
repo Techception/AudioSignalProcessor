@@ -36,5 +36,5 @@ echo "playing...$playback_pid"
 		fi
 	
 	done
-}| ./program/src/audio_project/render.py > "$pipe_sound" 
+}| ./src/audio_project/render.py > "$pipe_sound" 
 

@@ -15,11 +15,12 @@ frequency_hz = 320; # default frequency in Hz
 chunk = 441 # number of samples to generate at a time
 wait = chunk / SAMPLE_RATE # time to wait between chunks in seconds
 index = 0
+decay = 1
 # </variables>
 
 # <functions>
 # <generator>  
-amplitude = lambda f, t: sin(2 * pi * f * t)
+amplitude = lambda f, t: (1/decay)*sin(2 * pi * f * t)
 def generator():
     t_i = [(index + i) / SAMPLE_RATE for i in range(chunk)]
     waveChunk = [amplitude(frequency_hz, t) for t in t_i]
@@ -33,6 +34,7 @@ def generator():
 def console_input():
     global PLAY
     global frequency_hz
+    global decay
     exitCode = 1
 
     #promt_in = None
@@ -40,7 +42,7 @@ def console_input():
     promt_in = "Enter new frequency in Hz (or 'q' to quit): "
     #print(promt_in, file=sys.stderr, flush=True)
     user_input = input()
-
+    decay = 1
     # <check for quit command>
     if user_input.lower() == 'q':
         PLAY = False
@@ -68,9 +70,12 @@ def console_input():
 def play_thread():
     global PLAY
     global index
+    global decay
     # <range of time points to generate wave samples for/>
     while PLAY:
         generator()
+        decay += 1
+        print(decay, end='\r', file=sys.stderr, flush=True)
         # <update index and wait for next chunk/>
         index += chunk
         time.sleep(wait)  # Sleep for the duration of the chunk
