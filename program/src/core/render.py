@@ -13,49 +13,57 @@ SAMPLE_RATE = 44100; # sample rate
 frequency_hz = 320; # default frequency in Hz
 chunk = 441 # number of samples to generate at a time
 wait = chunk / SAMPLE_RATE # time to wait between chunks in seconds
+index = 0
 # </variables>
 
-# <Calculations>
-# generate amplitude of wave at time t 
-# A(t) = A x sin(2 x pi x f x t)
-# t = index/SAMPLE_RATE # time in seconds related to number of samples
-def sample(f, index):
-    return sin(2 * pi * f * index / SAMPLE_RATE)
-# </Calculations>
-
-# <generator> 
-# perpetuates the wave generation over time
-def play_thread():
-    global frequency_hz
-    index = 0
-
-    while True:
-        sound_chunk = array([sample(frequency_hz, index + i) * 32767 for i in range(chunk)], dtype=int16)
-        sys.stdout.buffer.write(sound_chunk.tobytes())
-        sys.stdout.buffer.flush()
-        index += chunk
-        time.sleep(wait)  # Sleep for the duration of the chunk
-
+# <functions>
+# <generator>  
+amplitude = lambda f, t: sin(2 * pi * f * t)
+def generator():
+    t_i = [(index + i) / SAMPLE_RATE for i in range(chunk)]
+    waveChunk = [amplitude(frequency_hz, t) for t in t_i]
+    sound_chunk = (array(waveChunk) * 32767).astype(int16).tobytes()
+    # <send wave samples to stdout/>
+    sys.stdout.buffer.write(sound_chunk)
+    sys.stdout.buffer.flush()
 # </generator>
 
-# <input thread>
-def input_thread():
+# <console_input> read user input and update frequency
+def console_input():
     global frequency_hz
-    
-    while True:
-        #print('enter: ')
-        user_input = input()
 
-        if str(user_input) == 'q':
-            quit()        
-        
-        try:
-            new_frequency = 100*float(user_input)
-            frequency_hz = new_frequency
-            print(f"Frequency changed to {frequency_hz} Hz")
-        except ValueError:
-            pass
-# </input thread>
+    #promt_in = None
+    #promt_out = None
+    promt_in = "Enter new frequency in Hz (or 'q' to quit): "
+    promt_out = f"Current frequency: {frequency_hz} Hz. Enter new frequency in Hz (or 'q' to quit): "
+    print(promt_in, file=sys.stderr, flush=True)
+    user_input = input()
+    try:
+        new_frequency = 100*float(user_input)
+    except ValueError:
+        new_frequency = 0 
+    frequency_hz = new_frequency
+    print(promt_out, file=sys.stderr, flush=True)
+    return None
+# </console_input>
+# </functions> 
+
+# <thread 1> play_thread: generates wave samples and sends them to stdout
+def play_thread():
+    global index
+    # <range of time points to generate wave samples for/>
+    while True:
+        generator()
+        # <update index and wait for next chunk/>
+        index += chunk
+        time.sleep(wait)  # Sleep for the duration of the chunk
+# </thread 1>
+
+# <thread 2> input_thread: reads user input and updates frequency
+def input_thread():
+    while True:
+        console_input()
+# </thread 2>
 
 # <main>
 def main():
