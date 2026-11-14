@@ -46,7 +46,7 @@ def input_thread():
         #print('enter: ')
         user_input = input()
 
-        if user_input == 'q':
+        if str(user_input) == 'q':
             quit()        
         
         try:
