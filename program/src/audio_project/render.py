@@ -38,14 +38,13 @@ def console_input():
     #promt_in = None
     #promt_out = None
     promt_in = "Enter new frequency in Hz (or 'q' to quit): "
-    promt_out = f"Current frequency: {frequency_hz} Hz. Enter new frequency in Hz (or 'q' to quit): "
     #print(promt_in, file=sys.stderr, flush=True)
     user_input = input()
 
     # <check for quit command>
     if user_input.lower() == 'q':
         PLAY = False
-        print("Exiting...", file=sys.stderr, flush=True)
+        print("\nExiting...", file=sys.stderr, flush=True)
         exitCode = 0
         return exitCode
 
@@ -56,6 +55,8 @@ def console_input():
         new_frequency = 0 
     
     frequency_hz = new_frequency
+
+    promt_out = f"Current frequency: {frequency_hz} Hz. Enter new frequency in Hz (or 'q' to quit): "
     print(promt_out, end='\r', file=sys.stderr, flush=True)
     
     exitCode = 0
