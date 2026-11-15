@@ -25,6 +25,7 @@ playback_pid=$!
 clear
 # input process
 echo "playing...$playback_pid"
+echo "Enter new frequency in Hz (or 'q' to quit): "
 {
 	while true; do 
 		read -rsn1 key 
