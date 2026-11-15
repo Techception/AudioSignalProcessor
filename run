@@ -11,8 +11,8 @@ fi
 	
 echo "Starting Audio Signal Processor..." 
 
-#pipe_input=./program/data/pipe_input
-#[[ -p "$pipe_input" ]] || mkfifo "$pipe_input"	
+pipe_input=./program/data/pipe_input
+[[ -p "$pipe_input" ]] || mkfifo "$pipe_input"	
 # <pipes>
 pipe_sound=./program/data/pipe_sound
 [[ -p "$pipe_sound" ]] || mkfifo "$pipe_sound"
@@ -21,6 +21,9 @@ pipe_sound=./program/data/pipe_sound
 ffplay -f s16le -ar 44100 -ch_layout mono -nodisp -fflags nobuffer -flags low_delay - \
 	< "$pipe_sound" 2> /dev/null &
 playback_pid=$!
+
+./src/audio_project/render.py < "$pipe_input" 1> "$pipe_sound" &
+python_pid=$!
 
 clear
 # input process
@@ -33,9 +36,11 @@ echo "Enter new frequency in Hz (or 'q' to quit): "
 
 		if [[ $key == "q" ]]; then
 			kill $playback_pid
+			kill $python_pid
 			break
 		fi
 	
 	done
-}| ./src/audio_project/render.py > "$pipe_sound" 
+}> "$pipe_input"
+#./src/audio_project/render.py > "$pipe_sound" 
 

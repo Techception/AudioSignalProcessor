@@ -7,102 +7,125 @@ import time;
 import threading;
 import sys;
 from dataclasses import dataclass;
+
+import math
 # </import>
 
 # <variables>
 @dataclass
 class AudioState:
-    PLAY: bool = True
-    SAMPLE_RATE: int = 44100
+    is_playing: bool = True
+    sample_rate: int = 44100
     frequency_hz: float = 320
-    chunk: int = 441
-    wait: float = 441 / 44100
-    index: int = 0
-    decay: int = 0
-    sustain: int = 10
-    current: str = ""
+    chunk_size_samples: int = 441
+    chunk_duration_seconds: float = 441 / 44100
+    sample_index: int = 0
+    decay_steps: int = 0
+    sustain_chunks_remaining: int = 10
+    previous_input: str = ""
 # </variables>
 
 # <functions>
-# <generator>  
-amplitude = lambda f, t: sin(2 * pi * f * t)
-def generator(state):
-    t_i = [(state.index + i) / state.SAMPLE_RATE for i in range(state.chunk)]
-    waveChunk = [exp(-state.decay / 50) * amplitude(state.frequency_hz, t) for t in t_i]
-    sound_chunk = (array(waveChunk) * 32767).astype(int16).tobytes()
+# <audio generation>
+WAVEFORMS = {
+    "sin": lambda angle_radians: math.sin(angle_radians),
+    "square": lambda angle_radians: 1.0 if angle_radians < math.pi else -1.0,
+    "sawtooth": lambda angle_radians: 1.0 - angle_radians / math.pi,
+}
+
+
+def waveform_sample(
+    frequency_hz: float,
+    time_seconds: float,
+    waveform: str = "sin",
+    phi: float = 0.0,
+) -> float:
+    # Return a waveform sample; phi is a phase offset in radians.
+    angle_radians = (2*math.pi * frequency_hz*time_seconds + phi) % (2*math.pi)
+    waveform_name = waveform.lower()
+    sample_function = WAVEFORMS.get(waveform_name)
+    if sample_function is None:
+        raise ValueError(f"Unknown waveform: {waveform}")
+    return sample_function(angle_radians)
+
+def write_audio_chunk(state: AudioState) -> None:
+    sample_times = [
+        (state.sample_index + offset) / state.sample_rate
+        for offset in range(state.chunk_size_samples)
+    ]
+    samples = [
+        exp(-state.decay_steps / 50) * waveform_sample(state.frequency_hz, time_seconds)
+        for time_seconds in sample_times
+    ]
+    pcm_bytes = (array(samples) * 32767).astype(int16).tobytes()
     # <send wave samples to stdout/>
-    sys.stdout.buffer.write(sound_chunk)
+    sys.stdout.buffer.write(pcm_bytes)
     sys.stdout.buffer.flush()
-# </generator>
+# </audio generation>
 
-# <console_input> read user input and update frequency
-def console_input(state):
-    exitCode = 1
-
+# <frequency input>
+def read_frequency_input(state: AudioState) -> int:
     user_input = input()
-    if user_input != state.current:
-        state.decay = 0 #reset decay when user input is received
-    state.current = user_input.strip()
-    state.sustain = 10 #reset sustain when user input is received
+    if user_input != state.previous_input:
+        state.decay_steps = 0
+    state.previous_input = user_input.strip()
+    state.sustain_chunks_remaining = 10
     
     # <check for quit command>
     if user_input.lower() == 'q':
-        state.PLAY = False
+        state.is_playing = False
         print("\nExiting...", file=sys.stderr, flush=True)
-        exitCode = 0
-        return exitCode
+        return 0
 
     # <try to convert user input to float and update frequency>
     try:
-        new_frequency = 100*float(user_input)
+        new_frequency_hz = 100 * float(user_input)
     except ValueError:
-        new_frequency = 0 
+        new_frequency_hz = 0
     
-    state.frequency_hz = new_frequency
+    state.frequency_hz = new_frequency_hz
 
-    promt_out = f"Current frequency: {state.frequency_hz} Hz. Enter new frequency in Hz (or 'q' to quit): "
-    print(promt_out, end='\r', file=sys.stderr, flush=True)
+    prompt = f"Current frequency: {state.frequency_hz} Hz. Enter new frequency in Hz (or 'q' to quit): "
+    print(prompt, end='\r', file=sys.stderr, flush=True)
     
-    exitCode = 0
-    return exitCode
-# </console_input>
+    return 0
+# </frequency input>
 # </functions> 
 
-# <thread 1> play_thread: generates wave samples and sends them to stdout
-def play_thread(state):
+# <thread 1> playback_worker: generates wave samples and sends them to stdout
+def playback_worker(state: AudioState) -> None:
     # <range of time points to generate wave samples for/>
-    while state.PLAY:
-        generator(state)
-        state.sustain -= 1
-        if state.sustain <= 0:
-            state.decay += 1 #increment decay for each chunk generated
-        print(state.decay, end='\r', file=sys.stderr, flush=True)
-        # <update index and wait for next chunk/>
-        state.index += state.chunk
-        time.sleep(state.wait*22/23)  # Sleep for the duration of the chunk
+    while state.is_playing:
+        write_audio_chunk(state)
+        state.sustain_chunks_remaining -= 1
+        if state.sustain_chunks_remaining <= 0:
+            state.decay_steps += 1
+        print(state.decay_steps, end='\r', file=sys.stderr, flush=True)
+        # <advance sample position and wait for next chunk/>
+        state.sample_index += state.chunk_size_samples
+        time.sleep(state.chunk_duration_seconds * 22 / 23)
 
     return None
 # </thread 1>
 
-# <thread 2> input_thread: reads user input and updates frequency
-def input_thread(state):
-    #global PLAY
-    while state.PLAY:
-        console_input(state)
+# <thread 2> input_worker: reads user input and updates frequency
+def input_worker(state: AudioState) -> None:
+    while state.is_playing:
+        read_frequency_input(state)
 # </thread 2>
 
 # <main>
 def main():
-    playstate = AudioState()
+    audio_state = AudioState()
+    
     # <define threads>
-    threads = {};
-    threads['play'] = threading.Thread(target=play_thread, args=(playstate,))
-    threads['input'] = threading.Thread(target=input_thread, args=(playstate,))
+    playback_thread = threading.Thread(target=playback_worker, args=(audio_state,))
+    input_thread = threading.Thread(target=input_worker, args=(audio_state,))
     # </define threads>
 
     # <threads>
-    threads['play'].start()
-    threads['input'].start()
+    playback_thread.start()
+    input_thread.start()
     # </threads>
 # </main>
 
