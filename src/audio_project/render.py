@@ -22,7 +22,9 @@ class AudioState:
     sample_index: int = 0
     decay_steps: int = 0
     sustain_chunks_remaining: int = 10
+    attack_chunks_remaining: int = 5
     previous_input: str = ""
+    pulse_time: int = 0
 # </variables>
 
 # <functions>
@@ -32,7 +34,7 @@ WAVEFORMS = {
     "square": lambda angle_radians: 1.0 if angle_radians < math.pi else -1.0,
     "sawtooth": lambda angle_radians: 1.0 - angle_radians / math.pi,
 }
-
+AMPLITUDE = lambda t,k,a: a*math.exp(-t*(1/k))
 
 def waveform_sample(
     frequency_hz: float,
@@ -49,12 +51,14 @@ def waveform_sample(
     return sample_function(angle_radians)
 
 def write_audio_chunk(state: AudioState) -> None:
+    decaytime = state.decay_steps   
+    attack = 1 if state.attack_chunks_remaining == 0 else 1/state.attack_chunks_remaining
     sample_times = [
         (state.sample_index + offset) / state.sample_rate
         for offset in range(state.chunk_size_samples)
     ]
     samples = [
-        exp(-state.decay_steps / 50) * waveform_sample(state.frequency_hz, time_seconds)
+        AMPLITUDE(decaytime,50,attack) * waveform_sample(state.frequency_hz, time_seconds)
         for time_seconds in sample_times
     ]
     pcm_bytes = (array(samples) * 32767).astype(int16).tobytes()
@@ -68,8 +72,14 @@ def read_frequency_input(state: AudioState) -> int:
     user_input = input()
     if user_input != state.previous_input:
         state.decay_steps = 0
+        state.sustain_chunks_remaining = 10
+        state.attack_chunks_remaining = 10
+    # elif user_input == state.previous_input:
+    #     if state.sustain_chunks_remaining == 0:
+    #         state.decay_steps = 0
+
     state.previous_input = user_input.strip()
-    state.sustain_chunks_remaining = 10
+    #state.sustain_chunks_remaining = 10
     
     # <check for quit command>
     if user_input.lower() == 'q':
@@ -97,9 +107,14 @@ def playback_worker(state: AudioState) -> None:
     # <range of time points to generate wave samples for/>
     while state.is_playing:
         write_audio_chunk(state)
-        state.sustain_chunks_remaining -= 1
+        
         if state.sustain_chunks_remaining <= 0:
             state.decay_steps += 1
+        elif state.attack_chunks_remaining <= 0: 
+            state.sustain_chunks_remaining -= 1
+        else:
+            state.attack_chunks_remaining -= 1
+        
         print(state.decay_steps, end='\r', file=sys.stderr, flush=True)
         # <advance sample position and wait for next chunk/>
         state.sample_index += state.chunk_size_samples
