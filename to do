@@ -12,11 +12,12 @@ intention:
     + note should experience sustain
 
 2. when the user releases the key from the key board, the audio_project should: 
-    - note should experience release conditions immediately:
-        -- leter consideration to exact physics of release 
+    + note should experience release behaviour immediately:
+        release behavious is just decay for now
+        "immediately" conisdered as release after 50 cycles   
 
 3. when the same key is sequencially pressed, audio_project should: 
-    - register the 2 or more presses as distinct key presses 
-    - the sound wave should repeat on each press with dynamic envelope 
+    + register the 2 or more presses as distinct key presses 
+    + the sound wave should repeat on each press with dynamic envelope 
 
 

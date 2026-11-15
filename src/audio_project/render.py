@@ -24,7 +24,7 @@ class AudioState:
     sustain_chunks_remaining: int = 10
     attack_chunks_remaining: int = 5
     previous_input: str = ""
-    pulse_time: int = 0
+    released: int = 0
 # </variables>
 
 # <functions>
@@ -52,7 +52,7 @@ def waveform_sample(
 
 def write_audio_chunk(state: AudioState) -> None:
     decaytime = state.decay_steps   
-    attack = 1 if state.attack_chunks_remaining == 0 else 1/state.attack_chunks_remaining
+    attack = 1 if state.attack_chunks_remaining <= 0 else 1/state.attack_chunks_remaining**2
     sample_times = [
         (state.sample_index + offset) / state.sample_rate
         for offset in range(state.chunk_size_samples)
@@ -70,14 +70,15 @@ def write_audio_chunk(state: AudioState) -> None:
 # <frequency input>
 def read_frequency_input(state: AudioState) -> int:
     user_input = input()
-    if user_input != state.previous_input:
+    if state.released > 50 or user_input != state.previous_input:
         state.decay_steps = 0
-        state.sustain_chunks_remaining = 10
+        state.sustain_chunks_remaining = 50
         state.attack_chunks_remaining = 10
     # elif user_input == state.previous_input:
     #     if state.sustain_chunks_remaining == 0:
     #         state.decay_steps = 0
-
+    #state.sustain_chunks_remaining = 10
+    state.released = 0
     state.previous_input = user_input.strip()
     #state.sustain_chunks_remaining = 10
     
@@ -107,17 +108,18 @@ def playback_worker(state: AudioState) -> None:
     # <range of time points to generate wave samples for/>
     while state.is_playing:
         write_audio_chunk(state)
-        
-        if state.sustain_chunks_remaining <= 0:
-            state.decay_steps += 1
-        elif state.attack_chunks_remaining <= 0: 
+
+        state.attack_chunks_remaining -= 1
+        if state.attack_chunks_remaining <= 0 and state.released <= 50:
             state.sustain_chunks_remaining -= 1
-        else:
-            state.attack_chunks_remaining -= 1
+        else: 
+            state.decay_steps += 1
         
-        print(state.decay_steps, end='\r', file=sys.stderr, flush=True)
         # <advance sample position and wait for next chunk/>
         state.sample_index += state.chunk_size_samples
+        state.released += 1
+        #print(state.decay_steps, end='\r', file=sys.stderr, flush=True)
+        print(state.released, end='\r', file=sys.stderr, flush=True)
         time.sleep(state.chunk_duration_seconds * 22 / 23)
 
     return None

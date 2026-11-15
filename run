@@ -37,7 +37,7 @@ echo "Enter new frequency in Hz (or 'q' to quit): "
 		if [[ $key == "q" ]]; then
 			kill $playback_pid
 			kill $python_pid
-			break
+			break	
 		fi
 	
 	done
