@@ -17,6 +17,7 @@ wait = chunk / SAMPLE_RATE # time to wait between chunks in seconds
 index = 0
 decay = 0
 sustain = 10 # number of chunks to sustain before decaying
+current = "" # current user input
 # </variables>
 
 # <functions>
@@ -37,6 +38,7 @@ def console_input():
     global frequency_hz
     global decay
     global sustain
+    global current
     exitCode = 1
 
     #promt_in = None
@@ -44,7 +46,9 @@ def console_input():
     promt_in = "Enter new frequency in Hz (or 'q' to quit): "
     #print(promt_in, file=sys.stderr, flush=True)
     user_input = input()
-    decay = 0 #reset decay when user input is received
+    if user_input != current:
+        decay = 0 #reset decay when user input is received
+    current = user_input.strip()
     sustain = 10 #reset sustain when user input is received
     # <check for quit command>
     if user_input.lower() == 'q':
@@ -81,7 +85,7 @@ def play_thread():
         sustain -= 1
         if sustain <= 0:
             decay += 1 #increment decay for each chunk generated
-        #print(decay, end='\r', file=sys.stderr, flush=True)
+        print(decay, end='\r', file=sys.stderr, flush=True)
         # <update index and wait for next chunk/>
         index += chunk
         time.sleep(wait*22/23)  # Sleep for the duration of the chunk
