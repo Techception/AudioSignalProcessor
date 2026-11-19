@@ -26,6 +26,8 @@ class AudioState:
     previous_input: str = ""
     released: int = 0
 # </variables>
+# to do: separate golbal variables from sound pulse 
+# perhaps the audio pulse should be a class of its own 
 
 # <functions>
 # <audio generation>
@@ -34,7 +36,18 @@ WAVEFORMS = {
     "square": lambda angle_radians: 1.0 if angle_radians < math.pi else -1.0,
     "sawtooth": lambda angle_radians: 1.0 - angle_radians / math.pi,
 }
+# to do: triangle wave, square wave duty cycle 
+
 AMPLITUDE = lambda t,k,a: a*math.exp(-t*(1/k))
+# to do: entire ASDR profile in this function 
+
+def asdr(state: AudioState):
+    state.attack_chunks_remaining -= 1
+    if state.attack_chunks_remaining <= 0 and state.released <= 50:
+        state.sustain_chunks_remaining -= 1
+    else: 
+        state.decay_steps += 1
+
 
 def waveform_sample(
     frequency_hz: float,
@@ -108,13 +121,7 @@ def playback_worker(state: AudioState) -> None:
     # <range of time points to generate wave samples for/>
     while state.is_playing:
         write_audio_chunk(state)
-
-        state.attack_chunks_remaining -= 1
-        if state.attack_chunks_remaining <= 0 and state.released <= 50:
-            state.sustain_chunks_remaining -= 1
-        else: 
-            state.decay_steps += 1
-        
+        asdr(state)
         # <advance sample position and wait for next chunk/>
         state.sample_index += state.chunk_size_samples
         state.released += 1

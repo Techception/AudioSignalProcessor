@@ -1,0 +1,23 @@
+
+intention: 
+
+1. make held note decay instead of holding indefinitly - done
+2. kill unheld notes on release following asdr
+3. resolve repeated note failure 
+
+1. when the user maintains a key press, the audio_project should: 
+    + register this akin to a press on a keyboard 
+    + play the note pressed unbroken 
+    + note should experience attack
+    + note should experience sustain
+
+2. when the user releases the key from the key board, the audio_project should: 
+    + note should experience release behaviour immediately:
+        release behavious is just decay for now
+        "immediately" conisdered as release after 50 cycles   
+
+3. when the same key is sequencially pressed, audio_project should: 
+    + register the 2 or more presses as distinct key presses 
+    + the sound wave should repeat on each press with dynamic envelope 
+
+

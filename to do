@@ -1,23 +1,24 @@
+intent: 
 
-intention: 
+create asdr as specialised funtion 
+- a function should modify the sound waves amplitute to:
+ -> raise the volume from silent to max known as the attack 
+ -> deternmine how long a sound sshould play at the same volume, sustain 
+ -> determine the rate at which the sound wav decays into silence 
+ -> determin behavuiour when the key is relased 
+ -> these values should be based on: 
+  - a variable time
+  - damping coefficient 
+  - a constant analogous to energy or speed the key is hit (simulated)
 
-1. make held note decay instead of holding indefinitly - done
-2. kill unheld notes on release following asdr
-3. resolve repeated note failure 
-
-1. when the user maintains a key press, the audio_project should: 
-    + register this akin to a press on a keyboard 
-    + play the note pressed unbroken 
-    + note should experience attack
-    + note should experience sustain
-
-2. when the user releases the key from the key board, the audio_project should: 
-    + note should experience release behaviour immediately:
-        release behavious is just decay for now
-        "immediately" conisdered as release after 50 cycles   
-
-3. when the same key is sequencially pressed, audio_project should: 
-    + register the 2 or more presses as distinct key presses 
-    + the sound wave should repeat on each press with dynamic envelope 
-
-
+  create dedicated threads for: 
+   -> input
+    -- key press event 
+   -> throughput 
+    -- key hold status 
+    -- sound wave modification (asdr) 
+    -- clock update 
+    -- state variable update 
+   -> output
+    -- byte stream 
+    -- analytics subroutines
